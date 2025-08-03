@@ -1,0 +1,8 @@
+name: NMLEquipment
+version: '1.0'
+main: io.github.NoOne.nMLEquipment.NMLEquipment
+api-version: '1.21'
+commands:
+  equipment:
+    description: Opens the equipment menu
+    usage: /<command>
