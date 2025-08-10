@@ -40,20 +40,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>shade-if-needed</id>
-                        <phase>none</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.somebodyshome.menusystem</pattern>
+                                    <pattern>io.github.NoOne.menuSystem</pattern>
                                     <shadedPattern>${shade.prefix}.menuSystem</shadedPattern>
                                 </relocation>
                             </relocations>
@@ -95,7 +101,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>MenuSystem</artifactId>
-            <version>d7d5628675</version>
+            <version>80dfed5099</version>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
@@ -106,7 +112,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>f4c744a93c</version>
+            <version>a6ca100cd2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
