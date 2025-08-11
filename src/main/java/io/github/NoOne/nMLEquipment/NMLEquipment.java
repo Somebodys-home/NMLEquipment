@@ -15,6 +15,7 @@ public final class NMLEquipment extends JavaPlugin {
 
         getCommand("equipment").setExecutor(new EquipmentCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
+        getServer().getPluginManager().registerEvents(new EquipmentMenuListener(this), this);
     }
 
     public NMLEquipment getInstance() {
