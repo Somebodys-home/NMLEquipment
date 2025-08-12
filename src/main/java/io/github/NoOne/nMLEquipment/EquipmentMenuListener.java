@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.MenuSystem;
+import io.github.NoOne.nMLArmor.ArmorChangeEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.ItemType;
 import org.bukkit.Bukkit;
@@ -32,6 +33,7 @@ public class EquipmentMenuListener implements Listener {
         if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
             if (clickedSlot >= 36 && clickedSlot <= 40) {
                 event.setCancelled(true);
+
                 if (ItemSystem.isItemUsable(cursorItem, player) || cursorItem == null || cursorItem.getType() == Material.AIR) {
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
                         new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
@@ -46,29 +48,30 @@ public class EquipmentMenuListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         PlayerInventory playerInventory = player.getInventory();
         ItemStack currentItem = event.getCurrentItem();
-        ItemStack cursorItem = event.getCursor();
         ClickType clickType = event.getClick();
         int clickedSlot = event.getSlot();
 
-        switch (clickType) {
-            case SHIFT_LEFT, SHIFT_RIGHT -> {
-                if (clickedSlot >= 36 && clickedSlot <= 40) { // potentially armor off
-                    event.setCancelled(true);
-                    playerInventory.setItem(clickedSlot, null);
-                    playerInventory.addItem(currentItem);
+        if (clickType.isShiftClick()) {
+            if (clickedSlot >= 36 && clickedSlot <= 40) { // potentially armor off
+                event.setCancelled(true);
+                playerInventory.setItem(clickedSlot, null);
+                playerInventory.addItem(currentItem);
+
+                Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
+                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                }, 1L);
+
+                Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, currentItem, new ItemStack(Material.AIR)));
+            } else { // putting armor on
+                if (currentItem.hasItemMeta() && (ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.CHESTPLATE ||
+                        ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.BOOTS)
+                        && ItemSystem.isItemUsable(currentItem, player)) {
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
                         new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
                     }, 1L);
-                } else { // putting armor on
-                    if (currentItem.hasItemMeta() && (ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.CHESTPLATE ||
-                            ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.BOOTS)
-                            && ItemSystem.isItemUsable(currentItem, player)) {
 
-                        Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                            new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
-                        }, 1L);
-                    }
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, new ItemStack(Material.AIR), currentItem));
                 }
             }
         }
@@ -80,15 +83,20 @@ public class EquipmentMenuListener implements Listener {
         ItemStack heldItem = event.getItem();
         Action actionType = event.getAction();
 
-        switch (actionType) {
-            case RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK -> {
-                if (ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.CHESTPLATE ||
-                    ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.BOOTS) {
+        if (actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) {
+            if (ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.CHESTPLATE ||
+                ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.BOOTS) {
 
-                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
-                    }, 1L);
+                switch (ItemSystem.getItemTypeFromItemStack(heldItem)) {
+                    case HELMET -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getHelmet(), heldItem));
+                    case CHESTPLATE -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getChestplate(), heldItem));
+                    case LEGGINGS -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getLeggings(), heldItem));
+                    case BOOTS -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getBoots(), heldItem));
                 }
+
+                Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
+                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                }, 1L);
             }
         }
     }

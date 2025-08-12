@@ -2,8 +2,10 @@ package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
+import io.github.NoOne.nMLArmor.ArmorChangeEvent;
 import io.github.NoOne.nMLItems.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -51,20 +53,32 @@ public class EquipmentMenu extends Menu {
 
         switch (event.getSlot()) {
             case 11 -> { // take off helmet
-                playerInventory.addItem(playerInventory.getHelmet());
+                ItemStack helmet = playerInventory.getHelmet();
+                playerInventory.addItem(helmet);
                 playerInventory.setHelmet(new ItemStack(Material.AIR));
+
+                Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, helmet, new ItemStack(Material.AIR)));
             }
             case 20 -> { // take off chestplate
-                playerInventory.addItem(playerInventory.getChestplate());
+                ItemStack chestplate = playerInventory.getChestplate();
+                playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(new ItemStack(Material.AIR));
+
+                Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, chestplate, new ItemStack(Material.AIR)));
             }
             case 29 -> { // take off leggings
-                playerInventory.addItem(playerInventory.getLeggings());
+                ItemStack leggings = playerInventory.getLeggings();
+                playerInventory.addItem(leggings);
                 playerInventory.setLeggings(new ItemStack(Material.AIR));
+
+                Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, leggings, new ItemStack(Material.AIR)));
             }
             case 38 -> { // take off boots
-                playerInventory.addItem(playerInventory.getBoots());
+                ItemStack boots = playerInventory.getBoots();
+                playerInventory.addItem(boots);
                 playerInventory.setBoots(new ItemStack(Material.AIR));
+
+                Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, new ItemStack(Material.AIR)));
             }
         }
 
@@ -82,21 +96,29 @@ public class EquipmentMenu extends Menu {
                     ItemStack helmet = playerInventory.getHelmet();
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, helmet, clickedItem));
                 }
                 case CHESTPLATE -> {
                     ItemStack chestplate = playerInventory.getChestplate();
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, chestplate, clickedItem));
                 }
                 case LEGGINGS -> {
                     ItemStack leggings = playerInventory.getLeggings();
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, leggings, clickedItem));
                 }
                 case BOOTS -> {
                     ItemStack boots = playerInventory.getBoots();
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, clickedItem));
                 }
             }
         } else {

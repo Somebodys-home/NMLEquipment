@@ -5,6 +5,7 @@ api-version: '1.21'
 depend:
   - NMLPlayerStats
   - NMLItems
+  - NMLArmor
 commands:
   equipment:
     description: Opens the equipment menu
