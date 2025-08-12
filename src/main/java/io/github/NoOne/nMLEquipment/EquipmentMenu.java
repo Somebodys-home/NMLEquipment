@@ -54,6 +54,7 @@ public class EquipmentMenu extends Menu {
         switch (event.getSlot()) {
             case 11 -> { // take off helmet
                 ItemStack helmet = playerInventory.getHelmet();
+                if (helmet == null) helmet = new ItemStack(Material.AIR);
                 playerInventory.addItem(helmet);
                 playerInventory.setHelmet(new ItemStack(Material.AIR));
 
@@ -61,6 +62,7 @@ public class EquipmentMenu extends Menu {
             }
             case 20 -> { // take off chestplate
                 ItemStack chestplate = playerInventory.getChestplate();
+                if (chestplate == null) chestplate = new ItemStack(Material.AIR);
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(new ItemStack(Material.AIR));
 
@@ -68,6 +70,7 @@ public class EquipmentMenu extends Menu {
             }
             case 29 -> { // take off leggings
                 ItemStack leggings = playerInventory.getLeggings();
+                if (leggings == null) leggings = new ItemStack(Material.AIR);
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(new ItemStack(Material.AIR));
 
@@ -75,6 +78,7 @@ public class EquipmentMenu extends Menu {
             }
             case 38 -> { // take off boots
                 ItemStack boots = playerInventory.getBoots();
+                if (boots == null) boots = new ItemStack(Material.AIR);
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(new ItemStack(Material.AIR));
 

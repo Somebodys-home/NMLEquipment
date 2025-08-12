@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +32,7 @@ public class EquipmentMenuListener implements Listener {
         int clickedSlot = event.getSlot();
 
         if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
-            if (clickedSlot >= 36 && clickedSlot <= 40) {
+            if (clickedSlot >= 36 && clickedSlot <= 40 && (event.getSlotType() == InventoryType.SlotType.ARMOR || event.getSlotType() == InventoryType.SlotType.QUICKBAR)) {
                 event.setCancelled(true);
 
                 if (ItemSystem.isItemUsable(cursorItem, player) || cursorItem == null || cursorItem.getType() == Material.AIR) {
@@ -84,8 +85,8 @@ public class EquipmentMenuListener implements Listener {
         Action actionType = event.getAction();
 
         if (actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) {
-            if (ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.CHESTPLATE ||
-                ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.BOOTS) {
+            if (heldItem != null && (ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.CHESTPLATE ||
+                ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.BOOTS)) {
 
                 switch (ItemSystem.getItemTypeFromItemStack(heldItem)) {
                     case HELMET -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getHelmet(), heldItem));
