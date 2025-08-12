@@ -99,6 +99,8 @@ public class EquipmentMenu extends Menu {
                     playerInventory.setItem(event.getSlot(), boots);
                 }
             }
+        } else {
+            player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
         }
 
         setMenuItems();
