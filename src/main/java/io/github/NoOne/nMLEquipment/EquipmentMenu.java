@@ -5,6 +5,7 @@ import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLArmor.ArmorChangeEvent;
 import io.github.NoOne.nMLItems.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLItems.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -84,6 +85,17 @@ public class EquipmentMenu extends Menu {
 
                 Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, new ItemStack(Material.AIR)));
             }
+            case 30 -> { // take off offhand
+                ItemStack offhand = playerInventory.getItemInOffHand();
+                if (offhand == null) offhand = new ItemStack(Material.AIR);
+
+                if (ItemSystem.getItemTypeFromItemStack(offhand) != ItemType.GLOVE) {
+                    playerInventory.addItem(offhand);
+                    playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, offhand, new ItemStack(Material.AIR)));
+                }
+            }
         }
 
         setMenuItems();
@@ -124,6 +136,13 @@ public class EquipmentMenu extends Menu {
 
                     Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, clickedItem));
                 }
+                case SHIELD -> {
+                    ItemStack offhand = playerInventory.getItemInOffHand();
+                    playerInventory.setItemInOffHand(clickedItem);
+                    playerInventory.setItem(event.getSlot(), offhand);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, offhand, clickedItem));
+                }
             }
         } else {
             player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
@@ -160,10 +179,7 @@ public class EquipmentMenu extends Menu {
     }
 
     public ItemStack nothingItemCheck(ItemStack itemStack) {
-        if (itemStack == null) {
-            return nothingItem;
-        }
-        if (itemStack.getType() == Material.AIR) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return nothingItem;
         }
 
@@ -191,7 +207,8 @@ public class EquipmentMenu extends Menu {
             lore.add("§7§oOk you can't actually move your");
             lore.add("§7§omainhand item from here.");
         } else if (situation == 6) { // offhand
-            lore.add("§7§oDitto for your offhand item.");
+            lore.add("§7§oYou can move your offhand item");
+            lore.add("§7§oin and out of this slot, ya know.");
         }
 
         meta.setLore(lore);
@@ -203,11 +220,13 @@ public class EquipmentMenu extends Menu {
         HashMap<ItemStat, Double> chestplate = ItemSystem.getAllStats(playerInventory.getChestplate());
         HashMap<ItemStat, Double> leggings = ItemSystem.getAllStats(playerInventory.getLeggings());
         HashMap<ItemStat, Double> boots = ItemSystem.getAllStats(playerInventory.getBoots());
+        HashMap<ItemStat, Double> offhand = ItemSystem.getAllStats(playerInventory.getItemInOffHand());
         HashMap<ItemStat, Double> total = helmet;
 
         chestplate.forEach((key, value) -> total.merge(key, value, Double::sum));
         leggings.forEach((key, value) -> total.merge(key, value, Double::sum));
         boots.forEach((key, value) -> total.merge(key, value, Double::sum));
+        offhand.forEach((key, value) -> total.merge(key, value, Double::sum));
 
         return total;
     }
