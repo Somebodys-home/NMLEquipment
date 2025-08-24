@@ -3,7 +3,6 @@ package io.github.NoOne.nMLEquipment;
 import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.nMLArmor.ArmorChangeEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLItems.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import static io.github.NoOne.nMLItems.ItemType.*;
 
 public class EquipmentMenuListener implements Listener {
     private NMLEquipment nmlEquipment;
@@ -71,9 +71,9 @@ public class EquipmentMenuListener implements Listener {
 
                 Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, currentItem, new ItemStack(Material.AIR)));
             } else { // putting armor on
-                if (currentItem.hasItemMeta() && (ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.CHESTPLATE ||
-                        ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.BOOTS ||
-                        ItemSystem.getItemTypeFromItemStack(currentItem) == ItemType.SHIELD) && ItemSystem.isItemUsable(currentItem, player)) {
+                if (currentItem.hasItemMeta() && (ItemSystem.getItemType(currentItem) == HELMET || ItemSystem.getItemType(currentItem) == CHESTPLATE ||
+                        ItemSystem.getItemType(currentItem) == LEGGINGS || ItemSystem.getItemType(currentItem) == BOOTS ||
+                        ItemSystem.getItemType(currentItem) == SHIELD) && ItemSystem.isItemUsable(currentItem, player)) {
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
                         new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
@@ -92,10 +92,10 @@ public class EquipmentMenuListener implements Listener {
         Action actionType = event.getAction();
 
         if (actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) {
-            if (heldItem != null && (ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.CHESTPLATE ||
-                ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(heldItem) == ItemType.BOOTS)) {
+            if (heldItem != null && (ItemSystem.getItemType(heldItem) == HELMET || ItemSystem.getItemType(heldItem) == CHESTPLATE ||
+                ItemSystem.getItemType(heldItem) == LEGGINGS || ItemSystem.getItemType(heldItem) == BOOTS)) {
 
-                switch (ItemSystem.getItemTypeFromItemStack(heldItem)) {
+                switch (ItemSystem.getItemType(heldItem)) {
                     case HELMET -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getHelmet(), heldItem));
                     case CHESTPLATE -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getChestplate(), heldItem));
                     case LEGGINGS -> Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, player.getInventory().getLeggings(), heldItem));
@@ -114,9 +114,9 @@ public class EquipmentMenuListener implements Listener {
         Player player = event.getPlayer();
         ItemStack mainhand = event.getOffHandItem();
 
-        if (ItemSystem.getItemTypeFromItemStack(mainhand) == ItemType.HELMET || ItemSystem.getItemTypeFromItemStack(mainhand) == ItemType.CHESTPLATE ||
-                ItemSystem.getItemTypeFromItemStack(mainhand) == ItemType.LEGGINGS || ItemSystem.getItemTypeFromItemStack(mainhand) == ItemType.BOOTS
-                || ItemSystem.getItemTypeFromItemStack(mainhand) == ItemType.SHIELD) {
+        if (ItemSystem.getItemType(mainhand) == HELMET || ItemSystem.getItemType(mainhand) == CHESTPLATE ||
+                ItemSystem.getItemType(mainhand) == LEGGINGS || ItemSystem.getItemType(mainhand) == BOOTS
+                || ItemSystem.getItemType(mainhand) == SHIELD) {
 
             event.setCancelled(true);
             Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {

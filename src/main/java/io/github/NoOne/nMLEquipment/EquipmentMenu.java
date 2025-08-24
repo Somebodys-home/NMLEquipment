@@ -89,7 +89,7 @@ public class EquipmentMenu extends Menu {
                 ItemStack offhand = playerInventory.getItemInOffHand();
                 if (offhand == null) offhand = new ItemStack(Material.AIR);
 
-                if (ItemSystem.getItemTypeFromItemStack(offhand) != ItemType.GLOVE) {
+                if (ItemSystem.getItemType(offhand) != ItemType.GLOVE) {
                     playerInventory.addItem(offhand);
                     playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
 
@@ -107,7 +107,7 @@ public class EquipmentMenu extends Menu {
 
         ItemStack clickedItem = event.getCurrentItem();
         if (ItemSystem.isItemUsable(clickedItem, player)) {
-            switch (ItemSystem.getItemTypeFromItemStack(clickedItem)) {
+            switch (ItemSystem.getItemType(clickedItem)) {
                 case HELMET -> {
                     ItemStack helmet = playerInventory.getHelmet();
                     playerInventory.setHelmet(clickedItem);
@@ -241,7 +241,7 @@ public class EquipmentMenu extends Menu {
         statsItem.setItemMeta(statsMeta);
 
         if (total.isEmpty()) {
-            ItemSystem.resetStats(statsItem);
+            ItemSystem.clearStats(statsItem);
             ItemMeta meta = statsItem.getItemMeta();
             ArrayList<String> lore = new ArrayList<>();
             lore.add("");
@@ -250,10 +250,10 @@ public class EquipmentMenu extends Menu {
             meta.setLore(lore);
             statsItem.setItemMeta(meta);
         } else {
-            ItemSystem.resetStats(statsItem);
+            ItemSystem.clearStats(statsItem);
             ItemSystem.setStats(statsItem, total);
         }
 
-        ItemSystem.updateLoreWithItemStats(statsItem);
+        ItemSystem.updateLoreWithStats(statsItem);
     }
 }
