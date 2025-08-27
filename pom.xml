@@ -111,7 +111,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLArmor</artifactId>
-            <version>80952507a4</version>
+            <version>f4177f8be2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
