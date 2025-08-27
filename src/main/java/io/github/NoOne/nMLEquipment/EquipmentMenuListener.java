@@ -37,14 +37,14 @@ public class EquipmentMenuListener implements Listener {
 
                 if (cursorItem == null || cursorItem.getType() == Material.AIR) {
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
                 } else if (ItemSystem.isItemUsable(cursorItem, player)) {
                     player.getInventory().addItem(cursorItem);
                     player.setItemOnCursor(null);
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
                 }
             }
@@ -63,14 +63,14 @@ public class EquipmentMenuListener implements Listener {
                 event.setCancelled(true);
 
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
                 }, 1L);
             } else { // putting armor on
                 if ((ItemSystem.isEquippable(currentItem)) && ItemSystem.isItemUsable(currentItem, player)) {
                     event.setCancelled(true);
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
                 }
             }
@@ -84,11 +84,11 @@ public class EquipmentMenuListener implements Listener {
         Action actionType = event.getAction();
 
         if (actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) {
-            if (ItemSystem.isEquippable(heldItem)) {
+            if (ItemSystem.isEquippable(heldItem) && ItemSystem.getItemType(heldItem) != SHIELD) {
                 event.setCancelled(true);
 
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
                 }, 1L);
             }
         }
@@ -103,7 +103,7 @@ public class EquipmentMenuListener implements Listener {
             event.setCancelled(true);
 
             Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player), nmlEquipment).open();
+                new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
             }, 1L);
         }
     }

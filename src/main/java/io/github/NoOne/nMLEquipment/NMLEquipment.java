@@ -13,7 +13,7 @@ public final class NMLEquipment extends JavaPlugin {
         instance = this;
         nmlPlayerStats = JavaPlugin.getPlugin(NMLPlayerStats.class);
 
-        getCommand("equipment").setExecutor(new EquipmentCommand(this));
+        getCommand("equipment").setExecutor(new EquipmentCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new EquipmentMenuListener(this), this);
     }

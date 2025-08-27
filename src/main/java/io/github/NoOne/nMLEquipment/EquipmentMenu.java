@@ -17,15 +17,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class EquipmentMenu extends Menu {
-    private NMLEquipment nmlEquipment;
     private Player player;
     private PlayerInventory playerInventory;
     private ItemStack nothingItem;
     private ItemStack statsItem;
 
-    public EquipmentMenu(PlayerMenuUtility playerMenuUtility, NMLEquipment nmlEquipment) {
+    public EquipmentMenu(PlayerMenuUtility playerMenuUtility) {
         super(playerMenuUtility);
-        this.nmlEquipment = nmlEquipment;
 
         player = playerMenuUtility.getOwner();
         playerInventory = player.getInventory();
@@ -137,6 +135,14 @@ public class EquipmentMenu extends Menu {
                     Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, clickedItem));
                 }
                 case SHIELD -> {
+                    ItemStack offhand = playerInventory.getItemInOffHand();
+                    playerInventory.setItemInOffHand(clickedItem);
+                    playerInventory.setItem(event.getSlot(), offhand);
+
+                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, offhand, clickedItem));
+                }
+                case QUIVER -> {
+                    player.sendMessage("quiver");
                     ItemStack offhand = playerInventory.getItemInOffHand();
                     playerInventory.setItemInOffHand(clickedItem);
                     playerInventory.setItem(event.getSlot(), offhand);
