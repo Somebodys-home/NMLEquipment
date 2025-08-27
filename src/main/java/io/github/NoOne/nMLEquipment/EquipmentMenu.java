@@ -134,15 +134,7 @@ public class EquipmentMenu extends Menu {
 
                     Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, boots, clickedItem));
                 }
-                case SHIELD -> {
-                    ItemStack offhand = playerInventory.getItemInOffHand();
-                    playerInventory.setItemInOffHand(clickedItem);
-                    playerInventory.setItem(event.getSlot(), offhand);
-
-                    Bukkit.getPluginManager().callEvent(new ArmorChangeEvent(player, offhand, clickedItem));
-                }
-                case QUIVER -> {
-                    player.sendMessage("quiver");
+                case SHIELD, QUIVER -> {
                     ItemStack offhand = playerInventory.getItemInOffHand();
                     playerInventory.setItemInOffHand(clickedItem);
                     playerInventory.setItem(event.getSlot(), offhand);
