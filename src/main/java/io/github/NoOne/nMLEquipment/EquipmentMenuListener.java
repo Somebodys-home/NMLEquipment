@@ -1,7 +1,6 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.MenuSystem;
-import io.github.NoOne.nMLArmor.ArmorChangeEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,7 +14,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+
 import static io.github.NoOne.nMLItems.ItemType.*;
 
 public class EquipmentMenuListener implements Listener {
@@ -80,11 +79,13 @@ public class EquipmentMenuListener implements Listener {
     @EventHandler
     public void usingEquipmentInYourMainHand(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack heldItem = event.getItem();
+        ItemStack triggeredItem = event.getItem();
         Action actionType = event.getAction();
 
-        if (actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) {
-            if (ItemSystem.isEquippable(heldItem) && ItemSystem.getItemType(heldItem) != SHIELD) {
+        if ((actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) &&
+            (triggeredItem != null && player.getInventory().getItem(player.getInventory().getHeldItemSlot()) != null && player.getInventory().getItem(player.getInventory().getHeldItemSlot()).isSimilar(triggeredItem))) {
+
+            if (ItemSystem.isEquippable(triggeredItem) && ItemSystem.getItemType(triggeredItem) != SHIELD) {
                 event.setCancelled(true);
 
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
