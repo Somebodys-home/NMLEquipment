@@ -19,6 +19,12 @@ import java.util.*;
 public class EquipmentMenu extends Menu {
     private Player player;
     private PlayerInventory playerInventory;
+    private ItemStack helmet;
+    private ItemStack chestplate;
+    private ItemStack leggings;
+    private ItemStack boots;
+    private ItemStack mainHand;
+    private ItemStack offHand;
     private ItemStack nothingItem;
     private ItemStack statsItem;
 
@@ -27,6 +33,12 @@ public class EquipmentMenu extends Menu {
 
         player = playerMenuUtility.getOwner();
         playerInventory = player.getInventory();
+        helmet = playerInventory.getHelmet();
+        chestplate = playerInventory.getChestplate();
+        leggings = playerInventory.getLeggings();
+        boots = playerInventory.getBoots();
+        mainHand = playerInventory.getItemInMainHand();
+        offHand = playerInventory.getItemInOffHand();
 
         nothingItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta nothingMeta = nothingItem.getItemMeta();
@@ -52,43 +64,49 @@ public class EquipmentMenu extends Menu {
 
         switch (event.getSlot()) {
             case 11 -> { // take off helmet
-                ItemStack helmet = playerInventory.getHelmet();
                 if (helmet == null) helmet = new ItemStack(Material.AIR);
+
                 playerInventory.addItem(helmet);
                 playerInventory.setHelmet(new ItemStack(Material.AIR));
             }
             case 20 -> { // take off chestplate
-                ItemStack chestplate = playerInventory.getChestplate();
                 if (chestplate == null) chestplate = new ItemStack(Material.AIR);
+
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(new ItemStack(Material.AIR));
             }
             case 29 -> { // take off leggings
-                ItemStack leggings = playerInventory.getLeggings();
                 if (leggings == null) leggings = new ItemStack(Material.AIR);
+
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(new ItemStack(Material.AIR));
             }
             case 38 -> { // take off boots
-                ItemStack boots = playerInventory.getBoots();
                 if (boots == null) boots = new ItemStack(Material.AIR);
+
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(new ItemStack(Material.AIR));
             }
-            case 30 -> { // take off offhand
-                ItemStack offhand = playerInventory.getItemInOffHand();
-                if (offhand == null) offhand = new ItemStack(Material.AIR);
-
-                if (ItemSystem.getItemType(offhand) != ItemType.GLOVE) {
-                    HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offhand);
-
-                    for (Map.Entry<String, Double> statEntry : prevOffhandStats.entrySet()) {
-                        Bukkit.getPluginManager().callEvent(new StatChangeEvent(player, statEntry.getKey(), -statEntry.getValue()));
-                    }
-                    
-                    playerInventory.addItem(offhand);
-                    playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
+            case 21 -> { // stop taking off other glove (why?)
+                if (ItemSystem.getItemType(mainHand) == ItemType.GLOVE) {
+                    playerInventory.setItemInOffHand(offHand);
+                    return;
                 }
+            }
+            case 30 -> { // take off offHand
+                if (ItemSystem.getItemType(offHand) == ItemType.GLOVE) { // idk why i need to do this
+                    playerInventory.setItemInOffHand(offHand);
+                    return;
+                }
+
+                HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offHand);
+
+                for (Map.Entry<String, Double> statEntry : prevOffhandStats.entrySet()) {
+                    Bukkit.getPluginManager().callEvent(new StatChangeEvent(player, statEntry.getKey(), -statEntry.getValue()));
+                }
+
+                playerInventory.addItem(offHand);
+                playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
             }
         }
 
@@ -100,31 +118,27 @@ public class EquipmentMenu extends Menu {
         event.setCancelled(true);
 
         ItemStack clickedItem = event.getCurrentItem();
+
         if (ItemSystem.isItemUsable(clickedItem, player)) {
             switch (ItemSystem.getItemType(clickedItem)) {
                 case HELMET -> { // swapping helmets
-                    ItemStack helmet = playerInventory.getHelmet();
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
                 }
                 case CHESTPLATE -> { // swapping chestplates
-                    ItemStack chestplate = playerInventory.getChestplate();
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
                 }
                 case LEGGINGS -> { // swapping leggings
-                    ItemStack leggings = playerInventory.getLeggings();
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
                 }
                 case BOOTS -> { // swapping boots
-                    ItemStack boots = playerInventory.getBoots();
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
                 }
-                case SHIELD, QUIVER -> { // swapping offhand
-                    ItemStack offhand = playerInventory.getItemInOffHand();
-                    HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offhand);
+                case SHIELD, QUIVER -> { // swapping offHand
+                    HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offHand);
                     HashMap<String, Double> clickedItemStats = ItemSystem.convertItemStatsToPlayerStats(clickedItem);
 
                     for (Map.Entry<String, Double> statEntry : prevOffhandStats.entrySet()) {
@@ -136,7 +150,7 @@ public class EquipmentMenu extends Menu {
                     }
 
                     playerInventory.setItemInOffHand(clickedItem);
-                    playerInventory.setItem(event.getSlot(), offhand);
+                    playerInventory.setItem(event.getSlot(), offHand);
                 }
             }
         } else {
@@ -149,17 +163,17 @@ public class EquipmentMenu extends Menu {
     @Override
     public void setMenuItems() {
         updateNothingItem(1);
-        inventory.setItem(11, nothingItemCheck(playerInventory.getHelmet()));
+        inventory.setItem(11, nothingItemCheck(helmet));
         updateNothingItem(2);
-        inventory.setItem(20, nothingItemCheck(playerInventory.getChestplate()));
+        inventory.setItem(20, nothingItemCheck(chestplate));
         updateNothingItem(3);
-        inventory.setItem(29, nothingItemCheck(playerInventory.getLeggings()));
+        inventory.setItem(29, nothingItemCheck(leggings));
         updateNothingItem(4);
-        inventory.setItem(38, nothingItemCheck(playerInventory.getBoots()));
+        inventory.setItem(38, nothingItemCheck(boots));
         updateNothingItem(5);
-        inventory.setItem(21, nothingItemCheck(playerInventory.getItemInMainHand()));
+        inventory.setItem(21, nothingItemCheck(mainHand));
         updateNothingItem(6);
-        inventory.setItem(30, nothingItemCheck(playerInventory.getItemInOffHand()));
+        inventory.setItem(30, nothingItemCheck(offHand));
 
         updateStatsItem();
 
@@ -201,8 +215,8 @@ public class EquipmentMenu extends Menu {
         } else if (situation == 5) { // mainhand
             lore.add("§7§oOk you can't actually move your");
             lore.add("§7§omainhand item from here.");
-        } else if (situation == 6) { // offhand
-            lore.add("§7§oYou can move your offhand item");
+        } else if (situation == 6) { // offHand
+            lore.add("§7§oYou can move your offHand item");
             lore.add("§7§oin and out of this slot, ya know.");
         }
 
@@ -211,17 +225,17 @@ public class EquipmentMenu extends Menu {
     }
 
     public HashMap<ItemStat, Double> getAllDefensesOfPlayerArmor() {
-        HashMap<ItemStat, Double> helmet = ItemSystem.getAllStats(playerInventory.getHelmet());
-        HashMap<ItemStat, Double> chestplate = ItemSystem.getAllStats(playerInventory.getChestplate());
-        HashMap<ItemStat, Double> leggings = ItemSystem.getAllStats(playerInventory.getLeggings());
-        HashMap<ItemStat, Double> boots = ItemSystem.getAllStats(playerInventory.getBoots());
-        HashMap<ItemStat, Double> offhand = ItemSystem.getAllStats(playerInventory.getItemInOffHand());
-        HashMap<ItemStat, Double> total = helmet;
+        HashMap<ItemStat, Double> helmetStats = ItemSystem.getAllStats(helmet);
+        HashMap<ItemStat, Double> chestplateStats = ItemSystem.getAllStats(chestplate);
+        HashMap<ItemStat, Double> leggingsStats = ItemSystem.getAllStats(leggings);
+        HashMap<ItemStat, Double> bootsStats = ItemSystem.getAllStats(boots);
+        HashMap<ItemStat, Double> offhandStats = ItemSystem.getAllStats(offHand);
+        HashMap<ItemStat, Double> total = helmetStats;
 
-        chestplate.forEach((key, value) -> total.merge(key, value, Double::sum));
-        leggings.forEach((key, value) -> total.merge(key, value, Double::sum));
-        boots.forEach((key, value) -> total.merge(key, value, Double::sum));
-        offhand.forEach((key, value) -> total.merge(key, value, Double::sum));
+        chestplateStats.forEach((key, value) -> total.merge(key, value, Double::sum));
+        leggingsStats.forEach((key, value) -> total.merge(key, value, Double::sum));
+        bootsStats.forEach((key, value) -> total.merge(key, value, Double::sum));
+        offhandStats.forEach((key, value) -> total.merge(key, value, Double::sum));
 
         return total;
     }
