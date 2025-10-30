@@ -1,6 +1,7 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.Menu;
+import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLItems.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
@@ -68,24 +69,32 @@ public class EquipmentMenu extends Menu {
 
                 playerInventory.addItem(helmet);
                 playerInventory.setHelmet(new ItemStack(Material.AIR));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
+                new EquipmentMenu(playerMenuUtility).open();
             }
             case 20 -> { // take off chestplate
                 if (chestplate == null) chestplate = new ItemStack(Material.AIR);
 
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(new ItemStack(Material.AIR));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, null));
+                new EquipmentMenu(playerMenuUtility).open();
             }
             case 29 -> { // take off leggings
                 if (leggings == null) leggings = new ItemStack(Material.AIR);
 
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(new ItemStack(Material.AIR));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, null));
+                new EquipmentMenu(playerMenuUtility).open();
             }
             case 38 -> { // take off boots
                 if (boots == null) boots = new ItemStack(Material.AIR);
 
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(new ItemStack(Material.AIR));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, null));
+                new EquipmentMenu(playerMenuUtility).open();
             }
             case 21 -> { // stop taking off other glove (why?)
                 if (ItemSystem.getItemType(mainHand) == ItemType.GLOVE) {
@@ -99,14 +108,10 @@ public class EquipmentMenu extends Menu {
                     return;
                 }
 
-                HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offHand);
-
-                for (Map.Entry<String, Double> statEntry : prevOffhandStats.entrySet()) {
-                    Bukkit.getPluginManager().callEvent(new StatChangeEvent(player, statEntry.getKey(), -statEntry.getValue()));
-                }
-
                 playerInventory.addItem(offHand);
                 playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
+                new EquipmentMenu(playerMenuUtility).open();
             }
         }
 
@@ -124,33 +129,32 @@ public class EquipmentMenu extends Menu {
                 case HELMET -> { // swapping helmets
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, clickedItem));
+                    new EquipmentMenu(playerMenuUtility).open();
                 }
                 case CHESTPLATE -> { // swapping chestplates
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, clickedItem));
+                    new EquipmentMenu(playerMenuUtility).open();
                 }
                 case LEGGINGS -> { // swapping leggings
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, clickedItem));
+                    new EquipmentMenu(playerMenuUtility).open();
                 }
                 case BOOTS -> { // swapping boots
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, clickedItem));
+                    new EquipmentMenu(playerMenuUtility).open();
                 }
                 case SHIELD, QUIVER -> { // swapping offHand
-                    HashMap<String, Double> prevOffhandStats = ItemSystem.convertItemStatsToPlayerStats(offHand);
-                    HashMap<String, Double> clickedItemStats = ItemSystem.convertItemStatsToPlayerStats(clickedItem);
-
-                    for (Map.Entry<String, Double> statEntry : prevOffhandStats.entrySet()) {
-                        Bukkit.getPluginManager().callEvent(new StatChangeEvent(player, statEntry.getKey(), -statEntry.getValue()));
-                    }
-
-                    for (Map.Entry<String, Double> statEntry : clickedItemStats.entrySet()) {
-                        Bukkit.getPluginManager().callEvent(new StatChangeEvent(player, statEntry.getKey(), statEntry.getValue()));
-                    }
-
                     playerInventory.setItemInOffHand(clickedItem);
                     playerInventory.setItem(event.getSlot(), offHand);
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                    new EquipmentMenu(playerMenuUtility).open();
                 }
             }
         } else {

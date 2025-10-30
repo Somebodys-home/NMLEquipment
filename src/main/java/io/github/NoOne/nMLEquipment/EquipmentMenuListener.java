@@ -2,18 +2,25 @@ package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.github.NoOne.nMLItems.ItemType.*;
 
@@ -22,6 +29,21 @@ public class EquipmentMenuListener implements Listener {
 
     public EquipmentMenuListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
+    }
+
+    @EventHandler
+    public void onEquipmentChange(EquipmentChangeEvent event) {
+        HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
+        HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
+        Stats stats = nmlEquipment.getProfileManager().getPlayerProfile(event.getPlayer().getUniqueId()).getStats();
+
+        for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {
+            stats.removeFromStat(entry.getKey(), entry.getValue());
+        }
+
+        for (Map.Entry<String, Double> entry : donnedArmorStats.entrySet()) {
+            stats.add2Stat(entry.getKey(), entry.getValue());
+        }
     }
 
     @EventHandler()
@@ -106,6 +128,62 @@ public class EquipmentMenuListener implements Listener {
             Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
                 new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
             }, 1L);
+        }
+    }
+
+    @EventHandler()
+    public void armorLevelCheck(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
+        boolean usable = ItemSystem.isItemUsable(heldItem, player);
+
+        if (heldItem == null || heldItem.getType() == Material.AIR) { return; }
+        if (!heldItem.hasItemMeta()) { return; }
+        if (ItemSystem.getItemType(heldItem) == null) { return; }
+        if (!usable) {
+            player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+        }
+
+        ItemSystem.updateUnusableItemName(heldItem, usable);
+    }
+
+    @EventHandler
+    public void unusableArmorCheck(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        ClickType click = event.getClick();
+        InventoryAction action = event.getAction();
+        ItemStack armor = event.getCursor();
+        int slot = event.getSlot();
+
+        if (click == ClickType.SHIFT_LEFT || click == ClickType.SHIFT_RIGHT) {
+            if (ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
+                player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+                event.setCancelled(true);
+                ItemSystem.updateUnusableItemName(armor, false);
+                return;
+            }
+        }
+
+        if ((slot >= 36 && slot <= 40) && (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE || action == InventoryAction.PLACE_SOME)) {
+            if (ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
+                player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+                event.setCancelled(true);
+                ItemSystem.updateUnusableItemName(armor, false);
+            }
+        }
+    }
+
+    @EventHandler
+    public void blockRightClickEquippingUnusableArmorFromHand(PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player player = event.getPlayer();
+            ItemStack item = event.getItem();
+
+            if (ItemSystem.isEquippable(item) && !ItemSystem.isItemUsable(item, player)) {
+                ItemSystem.updateUnusableItemName(item, false);
+                event.setCancelled(true);
+                player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+            }
         }
     }
 }
