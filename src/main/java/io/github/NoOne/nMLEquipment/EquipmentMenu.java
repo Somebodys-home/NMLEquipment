@@ -110,7 +110,7 @@ public class EquipmentMenu extends Menu {
 
                 playerInventory.addItem(offHand);
                 playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
-                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
+                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
                 new EquipmentMenu(playerMenuUtility).open();
             }
         }
