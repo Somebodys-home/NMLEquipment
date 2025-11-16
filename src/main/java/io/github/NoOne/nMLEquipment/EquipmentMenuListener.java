@@ -35,7 +35,7 @@ public class EquipmentMenuListener implements Listener {
     public void onEquipmentChange(EquipmentChangeEvent event) {
         HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
         HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
-        Stats stats = nmlEquipment.getProfileManager().getPlayerStats(event.getPlayer().getUniqueId());
+        Stats stats = nmlEquipment.getProfileManager().getPlayerProfile(event.getPlayer().getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {
             stats.removeFromStat(entry.getKey(), entry.getValue());
