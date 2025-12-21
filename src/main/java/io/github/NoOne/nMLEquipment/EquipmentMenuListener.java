@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -137,14 +138,20 @@ public class EquipmentMenuListener implements Listener {
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
         boolean usable = ItemSystem.isItemUsable(heldItem, player);
 
-        if (heldItem == null || heldItem.getType() == Material.AIR) { return; }
-        if (!heldItem.hasItemMeta()) { return; }
-        if (ItemSystem.getItemType(heldItem) == null) { return; }
+        if (heldItem == null || heldItem.getType() == Material.AIR) return;
+        if (!heldItem.hasItemMeta()) return;
+        if (ItemSystem.getItemType(heldItem) == null) return;
+
+        PersistentDataContainer pdc = heldItem.getItemMeta().getPersistentDataContainer();
+
+        if (!pdc.has(ItemSystem.getLevelKey())) return;
         if (!usable) {
             player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
         }
 
-        ItemSystem.updateUnusableItemName(heldItem, usable);
+        if (pdc.has(ItemSystem.getOriginalNameKey())) {
+            ItemSystem.updateUnusableItemName(heldItem, usable);
+        }
     }
 
     @EventHandler
