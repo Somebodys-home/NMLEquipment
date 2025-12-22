@@ -133,10 +133,11 @@ public class EquipmentMenuListener implements Listener {
     }
 
     @EventHandler()
-    public void armorLevelCheck(PlayerItemHeldEvent event) {
+    public void itemLevelCheck(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
-        boolean usable = ItemSystem.isItemUsable(heldItem, player);
+
+        boolean usable = false;
 
         if (heldItem == null || heldItem.getType() == Material.AIR) return;
         if (!heldItem.hasItemMeta()) return;
@@ -145,6 +146,13 @@ public class EquipmentMenuListener implements Listener {
         PersistentDataContainer pdc = heldItem.getItemMeta().getPersistentDataContainer();
 
         if (!pdc.has(ItemSystem.getLevelKey())) return;
+
+        if (ItemSystem.isItemType(heldItem, HOE)) {
+            usable = ItemSystem.isHoeUsable(heldItem, player);
+        } else {
+            ItemSystem.isItemUsable(heldItem, player);
+        }
+
         if (!usable) {
             player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
         }
