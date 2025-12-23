@@ -1,11 +1,13 @@
-package io.github.NoOne.nMLEquipment;
+package io.github.NoOne.nMLEquipment.listeners;
 
 import io.github.NoOne.menuSystem.MenuSystem;
+import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
+import io.github.NoOne.nMLEquipment.EquipmentMenu;
+import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -171,7 +173,7 @@ public class EquipmentMenuListener implements Listener {
         int slot = event.getSlot();
 
         if (click == ClickType.SHIFT_LEFT || click == ClickType.SHIFT_RIGHT) {
-            if (ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
+            if (armor.hasItemMeta() && ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
                 player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
                 event.setCancelled(true);
                 ItemSystem.updateUnusableItemName(armor, false);

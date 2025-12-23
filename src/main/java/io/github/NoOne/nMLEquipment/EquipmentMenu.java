@@ -1,12 +1,11 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
+import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLItems.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.ItemType;
-import io.github.NoOne.nMLPlayerStats.statSystem.StatChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
