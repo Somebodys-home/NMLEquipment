@@ -105,13 +105,19 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>ff1cc9403d</version>
+            <version>c63472f9ad</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>ExpertiseStylePlugin</artifactId>
             <version>07dcedde54</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Somebodys-home</groupId>
+            <artifactId>NMLSkills</artifactId>
+            <version>595897bafa</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

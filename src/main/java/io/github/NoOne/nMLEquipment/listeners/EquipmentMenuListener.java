@@ -5,7 +5,9 @@ import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLEquipment.EquipmentMenu;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
+import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.HashMap;
@@ -29,24 +32,11 @@ import static io.github.NoOne.nMLItems.ItemType.*;
 
 public class EquipmentMenuListener implements Listener {
     private NMLEquipment nmlEquipment;
+    private SkillSetManager skillSetManager;
 
     public EquipmentMenuListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
-    }
-
-    @EventHandler
-    public void onEquipmentChange(EquipmentChangeEvent event) {
-        HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
-        HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
-        Stats stats = nmlEquipment.getProfileManager().getPlayerProfile(event.getPlayer().getUniqueId()).getStats();
-
-        for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {
-            stats.removeFromStat(entry.getKey(), entry.getValue());
-        }
-
-        for (Map.Entry<String, Double> entry : donnedArmorStats.entrySet()) {
-            stats.add2Stat(entry.getKey(), entry.getValue());
-        }
+        skillSetManager = nmlEquipment.getSkillSetManager();
     }
 
     @EventHandler()
@@ -135,32 +125,35 @@ public class EquipmentMenuListener implements Listener {
     }
 
     @EventHandler()
-    public void itemLevelCheck(PlayerItemHeldEvent event) {
+    public void levelCheck(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
+        boolean usable;
 
-        boolean usable = false;
-
-        if (heldItem == null || heldItem.getType() == Material.AIR) return;
-        if (!heldItem.hasItemMeta()) return;
-        if (ItemSystem.getItemType(heldItem) == null) return;
+        if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta()) {
+            return;
+        }
 
         PersistentDataContainer pdc = heldItem.getItemMeta().getPersistentDataContainer();
 
-        if (!pdc.has(ItemSystem.getLevelKey())) return;
+        if (pdc.has(ItemSystem.getLevelKey())) {
+            if (ItemSystem.isItemType(heldItem, HOE)) {
+                int farmingLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getFarmingLevel();
 
-        if (ItemSystem.isItemType(heldItem, HOE)) {
-            usable = ItemSystem.isHoeUsable(heldItem, player);
-        } else {
-            ItemSystem.isItemUsable(heldItem, player);
-        }
+                usable = farmingLevel >= ItemSystem.getLevel(heldItem);
+            } else {
+                int combatLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getCombatLevel();
 
-        if (!usable) {
-            player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
-        }
+                usable = combatLevel >= ItemSystem.getLevel(heldItem);
+            }
 
-        if (pdc.has(ItemSystem.getOriginalNameKey())) {
-            ItemSystem.updateUnusableItemName(heldItem, usable);
+            if (!usable) {
+                player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+            }
+
+            if (pdc.has(ItemSystem.getOriginalNameKey())) {
+                ItemSystem.updateUnusableItemName(heldItem, usable);
+            }
         }
     }
 

@@ -102,6 +102,9 @@ public class EquipmentMenu extends Menu {
                 }
             }
             case 30 -> { // take off offHand
+                boolean changedOffhand = true;
+                int foundSlot = -1;
+
                 if (ItemSystem.getItemType(offHand) == ItemType.GLOVE) { // idk why i need to do this
                     playerInventory.setItemInOffHand(offHand);
                     return;
@@ -109,7 +112,24 @@ public class EquipmentMenu extends Menu {
 
                 playerInventory.addItem(offHand);
                 playerInventory.setItemInOffHand(new ItemStack(Material.AIR));
-                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
+
+                /// where did that item go?
+                for (int slot = 0; slot < playerInventory.getSize(); slot++) {
+                    ItemStack stack = playerInventory.getItem(slot);
+                    if (stack != null && stack.isSimilar(offHand)) {
+                        foundSlot = slot;
+                        break;
+                    }
+                }
+
+                if (foundSlot == playerInventory.getHeldItemSlot() && ItemSystem.isItemType(offHand, ItemType.SHIELD)) {
+                    changedOffhand = false;
+                }
+
+                if (changedOffhand) {
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
+                }
+
                 new EquipmentMenu(playerMenuUtility).open();
             }
         }
@@ -150,9 +170,18 @@ public class EquipmentMenu extends Menu {
                     new EquipmentMenu(playerMenuUtility).open();
                 }
                 case SHIELD, QUIVER -> { // swapping offHand
+                    boolean changedOffhand = true;
+
+                    if (ItemSystem.isItemType(clickedItem, ItemType.SHIELD) && clickedItem.isSimilar(mainHand)) {
+                        changedOffhand = false;
+                    }
+
+                    if (changedOffhand) {
+                        Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                    }
+
                     playerInventory.setItemInOffHand(clickedItem);
                     playerInventory.setItem(event.getSlot(), offHand);
-                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
                     new EquipmentMenu(playerMenuUtility).open();
                 }
             }

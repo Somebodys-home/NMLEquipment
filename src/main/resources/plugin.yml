@@ -5,6 +5,8 @@ api-version: '1.21.8'
 depend:
   - NMLPlayerStats
   - NMLItems
+  - ProtocolLib
+  - NMLSkills
 commands:
   equipment:
     description: Opens the equipment menu

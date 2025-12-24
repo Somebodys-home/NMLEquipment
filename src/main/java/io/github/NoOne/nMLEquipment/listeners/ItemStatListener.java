@@ -2,12 +2,14 @@ package io.github.NoOne.nMLEquipment.listeners;
 
 import io.github.NoOne.expertiseStylePlugin.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
+import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLEquipment.events.PlayerDropItemSlotEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +35,33 @@ public class ItemStatListener implements Listener {
     }
 
     @EventHandler
+    public void onEquipmentChange(EquipmentChangeEvent event) {
+        HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
+        HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
+        Stats stats = nmlEquipment.getProfileManager().getPlayerProfile(event.getPlayer().getUniqueId()).getStats();
+
+        for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {
+            stats.removeFromStat(entry.getKey(), entry.getValue());
+        }
+
+        for (Map.Entry<String, Double> entry : donnedArmorStats.entrySet()) {
+            stats.add2Stat(entry.getKey(), entry.getValue());
+        }
+
+        if (event.getDonnedEquipment() == null) {
+            event.getPlayer().sendMessage("added stats from: null");
+        } else {
+            event.getPlayer().sendMessage("added stats from: " + event.getDonnedEquipment().getType());
+        }
+
+        if (event.getDoffedEquipment() == null) {
+            event.getPlayer().sendMessage("removed stats from: null");
+        } else {
+            event.getPlayer().sendMessage("removed stats from: " + event.getDoffedEquipment().getType());
+        }
+    }
+
+    @EventHandler
     public void updateItemStatsOnHold(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack newItem = player.getInventory().getItem(event.getNewSlot());
@@ -39,10 +69,10 @@ public class ItemStatListener implements Listener {
 
         if (player.getGameMode() == GameMode.CREATIVE) return;
         if (!AbilityItemManager.isAnAbility(newItem)) {
-            if (ItemSystem.isItemType(newItem, ItemType.SHIELD) || ItemSystem.isWeapon(newItem)) {
+            if ((ItemSystem.isItemType(newItem, ItemType.SHIELD) || ItemSystem.isWeapon(newItem))) {
                 addItemStatsToPlayer(player, newItem);
             }
-            if (ItemSystem.isItemType(oldItem, ItemType.SHIELD) || ItemSystem.isWeapon(newItem)) {
+            if ((ItemSystem.isItemType(oldItem, ItemType.SHIELD) || ItemSystem.isWeapon(oldItem))) {
                 removeItemStatsFromPlayer(player, oldItem);
             }
         }
@@ -57,17 +87,23 @@ public class ItemStatListener implements Listener {
         ItemStack triggeringItem = event.getCurrentItem();
         ItemStack previouslyHeldItem = playerInventory.getItem(heldItemSlot);
 
+        if (previouslyHeldItem == null) {
+            previouslyHeldItem = new ItemStack(Material.AIR);
+        }
+
+        ItemStack finalPreviouslyHeldItem = previouslyHeldItem;
+
         switch (event.getClick()) {
             case SHIFT_LEFT, SHIFT_RIGHT -> {
                 if (player.getGameMode() == GameMode.CREATIVE) return;
-                if (clickedSlot == heldItemSlot) { // shift clicking item out of hand
-                    if (ItemSystem.isItemType(triggeringItem, ItemType.SHIELD) || ItemSystem.isWeapon(triggeringItem)) {
+                if (clickedSlot == heldItemSlot) { // shift clicking weapon out of hand
+                    if (ItemSystem.isWeapon(triggeringItem) || ItemSystem.isItemType(triggeringItem, ItemType.SHIELD)) {
                         removeItemStatsFromPlayer(player, triggeringItem);
                         return;
                     }
                 }
 
-                if (ItemSystem.isItemType(triggeringItem, ItemType.SHIELD) || ItemSystem.isWeapon(triggeringItem)) { // maybe shift clicking item into hand
+                if (ItemSystem.isWeapon(triggeringItem) || ItemSystem.isItemType(triggeringItem, ItemType.SHIELD)) { // maybe shift clicking item into hand
                     ItemStack triggeringItemClone = triggeringItem.clone();
 
                     new BukkitRunnable() {
@@ -90,22 +126,26 @@ public class ItemStatListener implements Listener {
                     public void run() {
                         ItemStack newMainHand = playerInventory.getItem(heldItemSlot);
 
-                        if (ItemSystem.isItemType(previouslyHeldItem, ItemType.SHIELD) || ItemSystem.isWeapon(previouslyHeldItem)) {
-                            if (!Objects.requireNonNull(previouslyHeldItem).isSimilar(newMainHand)) {
-                                removeItemStatsFromPlayer(player, previouslyHeldItem);
-                            }
+                        if (newMainHand == null) {
+                            newMainHand = new ItemStack(Material.AIR);
                         }
 
+                        if (finalPreviouslyHeldItem.hasItemMeta() &&
+                            (ItemSystem.isWeapon(finalPreviouslyHeldItem) || ItemSystem.isItemType(finalPreviouslyHeldItem, ItemType.SHIELD)) &&
+                            !finalPreviouslyHeldItem.isSimilar(newMainHand)) {
 
-                        if (ItemSystem.isItemType(newMainHand, ItemType.SHIELD) || ItemSystem.isWeapon(triggeringItem)) {
-                            if (!Objects.requireNonNull(previouslyHeldItem).isSimilar(newMainHand)) {
-                                addItemStatsToPlayer(player, newMainHand);
-                            }
+                            removeItemStatsFromPlayer(player, finalPreviouslyHeldItem);
+                        }
+
+                        if (newMainHand.hasItemMeta() && (ItemSystem.isWeapon(newMainHand) || ItemSystem.isItemType(newMainHand, ItemType.SHIELD)) &&
+                            !finalPreviouslyHeldItem.isSimilar(newMainHand)) {
+
+                            addItemStatsToPlayer(player, newMainHand);
                         }
                     }
                 }.runTask(nmlEquipment);
             }
-            // moving items manually normally
+            // moving weapons manually normally
             default -> {
                 if (player.getGameMode() == GameMode.CREATIVE) return;
                 if (clickedSlot == heldItemSlot) {
@@ -115,10 +155,10 @@ public class ItemStatListener implements Listener {
                             ItemStack cursorItem = event.getCursor();
                             ItemStack newMainHandItem = player.getInventory().getItemInMainHand();
 
-                            if (ItemSystem.isItemType(newMainHandItem, ItemType.SHIELD) || ItemSystem.isWeapon(newMainHandItem)) {
+                            if (ItemSystem.isWeapon(newMainHandItem) || ItemSystem.isItemType(newMainHandItem, ItemType.SHIELD)) {
                                 addItemStatsToPlayer(player, newMainHandItem);
                             }
-                            if (ItemSystem.isItemType(cursorItem, ItemType.SHIELD) || ItemSystem.isWeapon(cursorItem)) {
+                            if (ItemSystem.isWeapon(cursorItem) || ItemSystem.isItemType(cursorItem, ItemType.SHIELD)) {
                                 removeItemStatsFromPlayer(player, cursorItem);
                             }
                         }
@@ -159,6 +199,7 @@ public class ItemStatListener implements Listener {
                     if (ItemSystem.isItemType(newHand, ItemType.SHIELD) || ItemSystem.isWeapon(newHand)) {
                         addItemStatsToPlayer(player, newHand);
                     }
+
                     if (ItemSystem.isItemType(oldHand, ItemType.SHIELD) || ItemSystem.isWeapon(oldHand)) {
                         removeItemStatsFromPlayer(player, oldHand);
                     }
@@ -184,6 +225,7 @@ public class ItemStatListener implements Listener {
     }
 
     private void addItemStatsToPlayer(Player player, ItemStack itemStack) {
+        player.sendMessage("added stats from: " + itemStack.getType());
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(itemStack).entrySet()) {
@@ -192,6 +234,7 @@ public class ItemStatListener implements Listener {
     }
 
     private void removeItemStatsFromPlayer(Player player, ItemStack itemStack) {
+        player.sendMessage("removed stats from: " + itemStack.getType());
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(itemStack).entrySet()) {

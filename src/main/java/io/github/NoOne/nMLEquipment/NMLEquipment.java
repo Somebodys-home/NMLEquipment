@@ -8,18 +8,22 @@ import io.github.NoOne.nMLEquipment.listeners.EquipmentMenuListener;
 import io.github.NoOne.nMLEquipment.listeners.ItemStatListener;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLSkills.NMLSkills;
+import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class NMLEquipment extends JavaPlugin {
     private static NMLEquipment instance;
     private ProtocolManager protocolManager;
     private ProfileManager profileManager;
+    private SkillSetManager skillSetManager;
 
     @Override
     public void onEnable() {
         instance = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
+        skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
 
         getCommand("equipment").setExecutor(new EquipmentCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
@@ -34,5 +38,9 @@ public final class NMLEquipment extends JavaPlugin {
 
     public ProfileManager getProfileManager() {
         return profileManager;
+    }
+
+    public SkillSetManager getSkillSetManager() {
+        return skillSetManager;
     }
 }
