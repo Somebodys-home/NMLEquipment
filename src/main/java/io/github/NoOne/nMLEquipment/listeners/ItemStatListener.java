@@ -47,18 +47,6 @@ public class ItemStatListener implements Listener {
         for (Map.Entry<String, Double> entry : donnedArmorStats.entrySet()) {
             stats.add2Stat(entry.getKey(), entry.getValue());
         }
-
-        if (event.getDonnedEquipment() == null) {
-            event.getPlayer().sendMessage("added stats from: null");
-        } else {
-            event.getPlayer().sendMessage("added stats from: " + event.getDonnedEquipment().getType());
-        }
-
-        if (event.getDoffedEquipment() == null) {
-            event.getPlayer().sendMessage("removed stats from: null");
-        } else {
-            event.getPlayer().sendMessage("removed stats from: " + event.getDoffedEquipment().getType());
-        }
     }
 
     @EventHandler
@@ -225,7 +213,6 @@ public class ItemStatListener implements Listener {
     }
 
     private void addItemStatsToPlayer(Player player, ItemStack itemStack) {
-        player.sendMessage("added stats from: " + itemStack.getType());
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(itemStack).entrySet()) {
@@ -234,7 +221,6 @@ public class ItemStatListener implements Listener {
     }
 
     private void removeItemStatsFromPlayer(Player player, ItemStack itemStack) {
-        player.sendMessage("removed stats from: " + itemStack.getType());
         Stats stats = profileManager.getPlayerProfile(player.getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(itemStack).entrySet()) {
