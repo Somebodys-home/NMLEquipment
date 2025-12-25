@@ -128,7 +128,7 @@ public class EquipmentMenuListener implements Listener {
     public void levelCheck(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
-        boolean usable;
+        boolean usable = true;
 
         if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta()) {
             return;
@@ -141,7 +141,7 @@ public class EquipmentMenuListener implements Listener {
                 int farmingLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getFarmingLevel();
 
                 usable = farmingLevel >= ItemSystem.getLevel(heldItem);
-            } else {
+            } else if (ItemSystem.isWeapon(heldItem) || ItemSystem.isEquippable(heldItem)){
                 int combatLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getCombatLevel();
 
                 usable = combatLevel >= ItemSystem.getLevel(heldItem);
