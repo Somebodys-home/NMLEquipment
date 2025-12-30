@@ -128,32 +128,30 @@ public class EquipmentMenuListener implements Listener {
     public void levelCheck(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
-        boolean usable = true;
 
-        if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta()) {
+        if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta() || !ItemSystem.hasLevelKey(heldItem)) {
             return;
         }
 
         PersistentDataContainer pdc = heldItem.getItemMeta().getPersistentDataContainer();
+        boolean usable = true;
 
-        if (pdc.has(ItemSystem.getLevelKey())) {
-            if (ItemSystem.isItemType(heldItem, HOE)) {
-                int farmingLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getFarmingLevel();
+        if (ItemSystem.isItemType(heldItem, HOE)) {
+            int farmingLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getFarmingLevel();
 
-                usable = farmingLevel >= ItemSystem.getLevel(heldItem);
-            } else if (ItemSystem.isWeapon(heldItem) || ItemSystem.isEquippable(heldItem)){
-                int combatLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getCombatLevel();
+            usable = farmingLevel >= ItemSystem.getLevel(heldItem);
+        } else if (ItemSystem.isWeapon(heldItem) || ItemSystem.isEquippable(heldItem)){
+            int combatLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getCombatLevel();
 
-                usable = combatLevel >= ItemSystem.getLevel(heldItem);
-            }
+            usable = combatLevel >= ItemSystem.getLevel(heldItem);
+        }
 
-            if (!usable) {
-                player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
-            }
+        if (!usable) {
+            player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+        }
 
-            if (pdc.has(ItemSystem.getOriginalNameKey())) {
-                ItemSystem.updateUnusableItemName(heldItem, usable);
-            }
+        if (pdc.has(ItemSystem.getOriginalNameKey())) {
+            ItemSystem.updateUnusableItemName(heldItem, usable);
         }
     }
 
