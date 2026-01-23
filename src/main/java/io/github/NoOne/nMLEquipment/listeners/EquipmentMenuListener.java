@@ -1,12 +1,9 @@
 package io.github.NoOne.nMLEquipment.listeners;
 
 import io.github.NoOne.menuSystem.MenuSystem;
-import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLEquipment.EquipmentMenu;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,8 +24,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-import static io.github.NoOne.nMLItems.ItemType.*;
+import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class EquipmentMenuListener implements Listener {
     private NMLEquipment nmlEquipment;
@@ -191,6 +189,20 @@ public class EquipmentMenuListener implements Listener {
                 ItemSystem.updateUnusableItemName(item, false);
                 event.setCancelled(true);
                 player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
+            }
+        }
+    }
+
+    @EventHandler
+    public void dontEquipSkulls(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        ItemStack helmet = player.getInventory().getHelmet();
+
+        if (Objects.requireNonNull(event.getCurrentItem()).getType() == Material.PLAYER_HEAD && event.getClick().isShiftClick()) {
+            assert helmet != null;
+
+            if (helmet.getType().isAir()) {
+                event.setCancelled(true);
             }
         }
     }

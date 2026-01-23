@@ -5,7 +5,7 @@ import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLEquipment.events.PlayerDropItemSlotEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLItems.ItemType;
+import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.GameMode;
@@ -23,7 +23,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class ItemStatListener implements Listener {
     private NMLEquipment nmlEquipment;
