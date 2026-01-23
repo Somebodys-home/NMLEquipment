@@ -192,18 +192,4 @@ public class EquipmentMenuListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void dontEquipSkulls(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        ItemStack helmet = player.getInventory().getHelmet();
-
-        if (Objects.requireNonNull(event.getCurrentItem()).getType() == Material.PLAYER_HEAD && event.getClick().isShiftClick()) {
-            assert helmet != null;
-
-            if (helmet.getType().isAir()) {
-                event.setCancelled(true);
-            }
-        }
-    }
 }
