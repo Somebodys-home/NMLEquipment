@@ -1,6 +1,6 @@
 package io.github.NoOne.nMLEquipment.listeners;
 
-import io.github.NoOne.expertiseStylePlugin.abilitySystem.AbilityItemManager;
+import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLEquipment.events.PlayerDropItemSlotEvent;
