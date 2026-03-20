@@ -3,6 +3,7 @@ package io.github.NoOne.nMLEquipment;
 import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
 import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
+import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.enums.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
@@ -25,7 +26,6 @@ public class EquipmentMenu extends Menu {
     private ItemStack boots;
     private ItemStack mainHand;
     private ItemStack offHand;
-    private ItemStack nothingItem;
     private ItemStack statsItem;
 
     public EquipmentMenu(PlayerMenuUtility playerMenuUtility) {
@@ -39,13 +39,6 @@ public class EquipmentMenu extends Menu {
         boots = playerInventory.getBoots();
         mainHand = playerInventory.getItemInMainHand();
         offHand = playerInventory.getItemInOffHand();
-
-        nothingItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta nothingMeta = nothingItem.getItemMeta();
-        nothingMeta.setDisplayName("§8...Nothing?");
-        nothingItem.setItemMeta(nothingMeta);
-
-        statsItem = new ItemStack(Material.CYAN_STAINED_GLASS_PANE);
     }
 
     @Override
@@ -132,6 +125,7 @@ public class EquipmentMenu extends Menu {
 
                 new EquipmentMenu(playerMenuUtility).open();
             }
+            case 53 -> playerInventory.close(); // exit
         }
 
         setMenuItems();
@@ -194,21 +188,14 @@ public class EquipmentMenu extends Menu {
 
     @Override
     public void setMenuItems() {
-        updateNothingItem(1);
-        inventory.setItem(11, nothingItemCheck(helmet));
-        updateNothingItem(2);
-        inventory.setItem(20, nothingItemCheck(chestplate));
-        updateNothingItem(3);
-        inventory.setItem(29, nothingItemCheck(leggings));
-        updateNothingItem(4);
-        inventory.setItem(38, nothingItemCheck(boots));
-        updateNothingItem(5);
-        inventory.setItem(21, nothingItemCheck(mainHand));
-        updateNothingItem(6);
-        inventory.setItem(30, nothingItemCheck(offHand));
+        ItemStack statsItem = setStatsItem();
 
-        updateStatsItem();
-
+        inventory.setItem(11, nothingItemCheck(helmet, 1));
+        inventory.setItem(20, nothingItemCheck(chestplate, 2));
+        inventory.setItem(29, nothingItemCheck(leggings, 3));
+        inventory.setItem(38, nothingItemCheck(boots, 4));
+        inventory.setItem(21, nothingItemCheck(mainHand, 5));
+        inventory.setItem(30, nothingItemCheck(offHand, 6));
         inventory.setItem(14, statsItem);
         inventory.setItem(15, statsItem);
         inventory.setItem(23, statsItem);
@@ -217,46 +204,65 @@ public class EquipmentMenu extends Menu {
         inventory.setItem(33, statsItem);
         inventory.setItem(41, statsItem);
         inventory.setItem(42, statsItem);
+        inventory.setItem(53, ItemCreator.createItem(Material.BARRIER, 1, "§cExit", List.of()));
     }
 
-    public ItemStack nothingItemCheck(ItemStack itemStack) {
-        if (itemStack == null || itemStack.getType() == Material.AIR) {
-            return nothingItem;
-        }
+    public ItemStack nothingItemCheck(ItemStack itemStack, int equipmentSlot) {
+        List<String> lore = new ArrayList<>(List.of(""));
 
-        return itemStack;
-    }
-
-    public void updateNothingItem(int situation) {
-        ItemMeta meta = nothingItem.getItemMeta();
-        List<String> lore = new ArrayList<>();
-        lore.add("");
-
-        if (situation == 1) { // helmet
+        if (equipmentSlot == 1) { // helmet
             lore.add("§7§oYou can move helmets in");
             lore.add("§7§oand out of this slot, ya know.");
-        } else if (situation == 2) { // chestplate
+        } else if (equipmentSlot == 2) { // chestplate
             lore.add("§7§oYou can move chestplates in");
             lore.add("§7§oand out of this slot, ya know.");
-        } else if (situation == 3) { // leggings
+        } else if (equipmentSlot == 3) { // leggings
             lore.add("§7§oYou can move leggings in");
             lore.add("§7§oand out of this slot, ya know.");
-        } else if (situation == 4) { // boots
+        } else if (equipmentSlot == 4) { // boots
             lore.add("§7§oYou can move boots in");
             lore.add("§7§oand out of this slot, ya know.");
-        } else if (situation == 5) { // mainhand
+        } else if (equipmentSlot == 5) { // mainhand
             lore.add("§7§oOk you can't actually move your");
             lore.add("§7§omainhand item from here.");
-        } else if (situation == 6) { // offHand
+        } else if (equipmentSlot == 6) { // offHand
             lore.add("§7§oYou can move your offHand item");
             lore.add("§7§oin and out of this slot, ya know.");
         }
-
-        meta.setLore(lore);
-        nothingItem.setItemMeta(meta);
+        
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
+            return ItemCreator.createItem(Material.BLACK_STAINED_GLASS_PANE, 1, "§8...Nothing?", lore);
+        } else {
+            return itemStack;
+        }
     }
 
-    public HashMap<ItemStat, Double> getAllDefensesOfPlayerArmor() {
+    public ItemStack setStatsItem() {
+        ItemStack statsItem = ItemCreator.createItem(Material.PURPLE_STAINED_GLASS_PANE, 1, "§d§nYour Drip's Total Stats:", List.of());
+        HashMap<ItemStat, Double> total = getAllDefensesOfPlayerArmor();
+
+        if (total.isEmpty()) {
+            ItemMeta statsMeta = statsItem.getItemMeta();
+            List<String> statsLore = List.of(
+                    "",
+                    "§7§oCongrats! You've either reached absolute",
+                    "§7§oequilibrium or you're completely nude."
+            );
+
+            statsMeta.setLore(statsLore);
+            statsItem.setItemMeta(statsMeta);
+        } else {
+            for (Map.Entry<ItemStat, Double> entry : total.entrySet()) {
+                ItemSystem.setStat(statsItem, entry.getKey(), entry.getValue());
+            }
+
+            ItemSystem.updateLoreWithStats(statsItem);
+        }
+
+        return statsItem;
+    }
+
+    private HashMap<ItemStat, Double> getAllDefensesOfPlayerArmor() {
         HashMap<ItemStat, Double> helmetStats = ItemSystem.getAllStats(helmet);
         HashMap<ItemStat, Double> chestplateStats = ItemSystem.getAllStats(chestplate);
         HashMap<ItemStat, Double> leggingsStats = ItemSystem.getAllStats(leggings);
@@ -270,31 +276,5 @@ public class EquipmentMenu extends Menu {
         offhandStats.forEach((key, value) -> total.merge(key, value, Double::sum));
 
         return total;
-    }
-
-    public void updateStatsItem() {
-        HashMap<ItemStat, Double> total = getAllDefensesOfPlayerArmor();
-        ItemMeta statsMeta = statsItem.getItemMeta();
-        ArrayList<String> statsLore = new ArrayList<>();
-        statsMeta.setDisplayName("§bYour Armor's Total Stats:");
-        statsLore.add("");
-        statsMeta.setLore(statsLore);
-        statsItem.setItemMeta(statsMeta);
-
-        if (total.isEmpty()) {
-            ItemSystem.clearStats(statsItem);
-            ItemMeta meta = statsItem.getItemMeta();
-            ArrayList<String> lore = new ArrayList<>();
-            lore.add("");
-            lore.add("§7§oCongrats! You've either reached true");
-            lore.add("§7§oequilibrium or you're completely nude.");
-            meta.setLore(lore);
-            statsItem.setItemMeta(meta);
-        } else {
-            ItemSystem.clearStats(statsItem);
-            ItemSystem.setStats(statsItem, total);
-        }
-
-        ItemSystem.updateLoreWithStats(statsItem);
     }
 }
