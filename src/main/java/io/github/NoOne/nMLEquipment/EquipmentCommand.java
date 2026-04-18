@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 
 public class EquipmentCommand implements CommandExecutor {
 
-    public EquipmentCommand() {}
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player player) {
