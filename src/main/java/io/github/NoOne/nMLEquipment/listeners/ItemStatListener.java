@@ -26,11 +26,9 @@ import java.util.Map;
 
 public class ItemStatListener implements Listener {
     private NMLEquipment nmlEquipment;
-    private ProfileManager profileManager;
 
     public ItemStatListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
-        profileManager = nmlEquipment.getProfileManager();
     }
 
     @EventHandler

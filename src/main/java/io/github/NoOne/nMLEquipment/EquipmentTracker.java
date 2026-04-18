@@ -66,4 +66,8 @@ public class EquipmentTracker {
 
         return a.isSimilar(b);
     }
+
+    public void setPreviousHeldItems(HashMap<UUID, ItemStack> previousHeldItems) {
+        this.previousHeldItems = previousHeldItems;
+    }
 }
