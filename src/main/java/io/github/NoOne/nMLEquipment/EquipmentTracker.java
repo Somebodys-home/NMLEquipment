@@ -19,12 +19,14 @@ import java.util.UUID;
 public class EquipmentTracker {
     private NMLEquipment nmlEquipment;
     private ProfileManager profileManager;
+    private ItemSystem itemSystem;
     private BukkitTask tracker;
     private HashMap<UUID, ItemStack> previousHeldItems = new HashMap<>();
 
     public EquipmentTracker(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
         profileManager = nmlEquipment.getProfileManager();
+        itemSystem = nmlEquipment.getItemSystem();
     }
 
     public void startTracker() {
@@ -39,12 +41,12 @@ public class EquipmentTracker {
                     if (!areEquals(heldItem, previousHeldItem) && !AbilityItemManager.isAnAbility(heldItem)) {
                         Stats stats = profileManager.getPlayerProfile(uuid).getStats();
 
-                        if ((ItemSystem.isItemType(heldItem, ItemType.SHIELD) || ItemSystem.isWeapon(heldItem))) {
-                            for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(heldItem).entrySet()) {
+                        if ((itemSystem.isItemType(heldItem, ItemType.SHIELD) || itemSystem.isWeapon(heldItem))) {
+                            for (Map.Entry<String, Double> statEntry : itemSystem.convertItemStatsToPlayerStats(heldItem).entrySet()) {
                                 stats.add2Stat(statEntry.getKey(), statEntry.getValue());
                             }                        }
-                        if ((ItemSystem.isItemType(previousHeldItem, ItemType.SHIELD) || ItemSystem.isWeapon(previousHeldItem))) {
-                            for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(previousHeldItem).entrySet()) {
+                        if ((itemSystem.isItemType(previousHeldItem, ItemType.SHIELD) || itemSystem.isWeapon(previousHeldItem))) {
+                            for (Map.Entry<String, Double> statEntry : itemSystem.convertItemStatsToPlayerStats(previousHeldItem).entrySet()) {
                                 stats.removeFromStat(statEntry.getKey(), statEntry.getValue());
                             }
                         }

@@ -8,11 +8,14 @@ import io.github.NoOne.nMLEquipment.listeners.ItemStatListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.MainHandsConfig;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandManager;
+import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLItems.NMLItems;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileConfig;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
 import io.github.NoOne.nMLSkills.NMLSkills;
 import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,11 +25,13 @@ public final class NMLEquipment extends JavaPlugin {
     private EquipmentTracker equipmentTracker;
     private MainHandsConfig mainHandsConfig;
     private SaveMainHandManager saveMainHandManager;
+    private ItemSystem itemSystem;
 
     @Override
     public void onEnable() {
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
         skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
+        itemSystem = JavaPlugin.getPlugin(NMLItems.class).getItemSystem(); // you good dawg??
 
         mainHandsConfig = new MainHandsConfig(this, "mainHands");
         mainHandsConfig.loadConfig();
@@ -43,8 +48,8 @@ public final class NMLEquipment extends JavaPlugin {
             }
         }.runTaskLater(this, 1L);
 
-        getCommand("equipment").setExecutor(new EquipmentCommand());
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
+        getCommand("equipment").setExecutor(new EquipmentCommand(this));
         getServer().getPluginManager().registerEvents(new EquipmentMenuListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemStatListener(this), this);
         getServer().getPluginManager().registerEvents(new SaveMainHandListener(this), this);
@@ -64,6 +69,10 @@ public final class NMLEquipment extends JavaPlugin {
 
     public SkillSetManager getSkillSetManager() {
         return skillSetManager;
+    }
+
+    public ItemSystem getItemSystem() {
+        return itemSystem;
     }
 
     public SaveMainHandManager getSaveMainHandManager() {

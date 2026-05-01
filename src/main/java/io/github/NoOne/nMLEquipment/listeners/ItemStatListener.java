@@ -26,15 +26,17 @@ import java.util.Map;
 
 public class ItemStatListener implements Listener {
     private NMLEquipment nmlEquipment;
+    private ItemSystem itemSystem;
 
     public ItemStatListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
+        itemSystem = nmlEquipment.getItemSystem();
     }
 
     @EventHandler
     public void onEquipmentChange(EquipmentChangeEvent event) {
-        HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
-        HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
+        HashMap<String, Double> doffedArmorStats = itemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
+        HashMap<String, Double> donnedArmorStats = itemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
         Stats stats = nmlEquipment.getProfileManager().getPlayerProfile(event.getPlayer().getUniqueId()).getStats();
 
         for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {

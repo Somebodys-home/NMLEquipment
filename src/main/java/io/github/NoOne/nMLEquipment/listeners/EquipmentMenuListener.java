@@ -19,22 +19,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import static io.github.NoOne.nMLItems.enums.ItemType.*;
 
 public class EquipmentMenuListener implements Listener {
     private NMLEquipment nmlEquipment;
     private SkillSetManager skillSetManager;
+    private ItemSystem itemSystem;
 
     public EquipmentMenuListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
         skillSetManager = nmlEquipment.getSkillSetManager();
+        itemSystem = nmlEquipment.getItemSystem();
     }
 
     @EventHandler()
@@ -49,14 +46,14 @@ public class EquipmentMenuListener implements Listener {
 
                 if (cursorItem == null || cursorItem.getType() == Material.AIR) {
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                    new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
-                } else if (ItemSystem.isItemUsable(cursorItem, player)) {
+                } else if (itemSystem.isItemUsable(cursorItem, player)) {
                     player.getInventory().addItem(cursorItem);
                     player.setItemOnCursor(null);
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                    new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
                 }
             }
@@ -75,14 +72,14 @@ public class EquipmentMenuListener implements Listener {
                 event.setCancelled(true);
 
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                    new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
                 }, 1L);
             } else { // putting armor on
-                if ((ItemSystem.isEquippable(currentItem)) && ItemSystem.isItemUsable(currentItem, player)) {
+                if ((itemSystem.isEquippable(currentItem)) && itemSystem.isItemUsable(currentItem, player)) {
                     event.setCancelled(true);
 
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                        new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                    new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
                     }, 1L);
                 }
             }
@@ -98,11 +95,11 @@ public class EquipmentMenuListener implements Listener {
         if ((actionType == Action.RIGHT_CLICK_AIR || actionType == Action.RIGHT_CLICK_BLOCK) &&
             (triggeredItem != null && player.getInventory().getItem(player.getInventory().getHeldItemSlot()) != null && player.getInventory().getItem(player.getInventory().getHeldItemSlot()).isSimilar(triggeredItem))) {
 
-            if (ItemSystem.isEquippable(triggeredItem) && ItemSystem.getItemType(triggeredItem) != SHIELD) {
+            if (itemSystem.isEquippable(triggeredItem) && itemSystem.getItemType(triggeredItem) != SHIELD) {
                 event.setCancelled(true);
 
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                    new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                    new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
                 }, 1L);
             }
         }
@@ -111,13 +108,12 @@ public class EquipmentMenuListener implements Listener {
     @EventHandler
     public void dontSwapEquipmentToOffhand(PlayerSwapHandItemsEvent event) {
         Player player = event.getPlayer();
-        ItemStack mainhand = event.getOffHandItem();
 
-        if (ItemSystem.isEquippable(mainhand)) {
+        if (itemSystem.isEquippable(event.getOffHandItem())) {
             event.setCancelled(true);
 
             Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> {
-                new EquipmentMenu(MenuSystem.getPlayerMenuUtility(player)).open();
+                new EquipmentMenu(nmlEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
             }, 1L);
         }
     }
@@ -127,29 +123,29 @@ public class EquipmentMenuListener implements Listener {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
 
-        if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta() || !ItemSystem.hasLevelKey(heldItem)) {
+        if (heldItem == null || heldItem.getType() == Material.AIR || !heldItem.hasItemMeta() || !itemSystem.hasLevelKey(heldItem)) {
             return;
         }
 
         PersistentDataContainer pdc = heldItem.getItemMeta().getPersistentDataContainer();
         boolean usable = true;
 
-        if (ItemSystem.isItemType(heldItem, HOE)) {
+        if (itemSystem.isItemType(heldItem, HOE)) {
             int farmingLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getFarmingLevel();
 
-            usable = farmingLevel >= ItemSystem.getLevel(heldItem);
-        } else if (ItemSystem.isWeapon(heldItem) || ItemSystem.isEquippable(heldItem)){
+            usable = farmingLevel >= itemSystem.getLevel(heldItem);
+        } else if (itemSystem.isWeapon(heldItem) || itemSystem.isEquippable(heldItem)){
             int combatLevel = skillSetManager.getSkillSet(player.getUniqueId()).getSkills().getCombatLevel();
 
-            usable = combatLevel >= ItemSystem.getLevel(heldItem);
+            usable = combatLevel >= itemSystem.getLevel(heldItem);
         }
 
         if (!usable) {
             player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
         }
 
-        if (pdc.has(ItemSystem.getOriginalNameKey())) {
-            ItemSystem.updateUnusableItemName(heldItem, usable);
+        if (pdc.has(itemSystem.getOriginalNameKey())) {
+            itemSystem.updateUnusableItemName(heldItem, usable);
         }
     }
 
@@ -162,19 +158,19 @@ public class EquipmentMenuListener implements Listener {
         int slot = event.getSlot();
 
         if (click == ClickType.SHIFT_LEFT || click == ClickType.SHIFT_RIGHT) {
-            if (armor.hasItemMeta() && ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
+            if (armor.hasItemMeta() && itemSystem.isEquippable(armor) && !itemSystem.isItemUsable(armor, player)) {
                 player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
                 event.setCancelled(true);
-                ItemSystem.updateUnusableItemName(armor, false);
+                itemSystem.updateUnusableItemName(armor, false);
                 return;
             }
         }
 
         if ((slot >= 36 && slot <= 40) && (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE || action == InventoryAction.PLACE_SOME)) {
-            if (ItemSystem.isEquippable(armor) && !ItemSystem.isItemUsable(armor, player)) {
+            if (itemSystem.isEquippable(armor) && !itemSystem.isItemUsable(armor, player)) {
                 player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
                 event.setCancelled(true);
-                ItemSystem.updateUnusableItemName(armor, false);
+                itemSystem.updateUnusableItemName(armor, false);
             }
         }
     }
@@ -185,8 +181,8 @@ public class EquipmentMenuListener implements Listener {
             Player player = event.getPlayer();
             ItemStack item = event.getItem();
 
-            if (ItemSystem.isEquippable(item) && !ItemSystem.isItemUsable(item, player)) {
-                ItemSystem.updateUnusableItemName(item, false);
+            if (itemSystem.isEquippable(item) && !itemSystem.isItemUsable(item, player)) {
+                itemSystem.updateUnusableItemName(item, false);
                 event.setCancelled(true);
                 player.sendMessage("§c⚠ §nYou are too inexperienced for this item!§r§c ⚠");
             }

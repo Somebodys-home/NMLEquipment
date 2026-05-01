@@ -18,6 +18,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class EquipmentMenu extends Menu {
+    private NMLEquipment nmlEquipment;
+    private ItemSystem itemSystem;
     private Player player;
     private PlayerInventory playerInventory;
     private ItemStack helmet;
@@ -26,11 +28,12 @@ public class EquipmentMenu extends Menu {
     private ItemStack boots;
     private ItemStack mainHand;
     private ItemStack offHand;
-    private ItemStack statsItem;
 
-    public EquipmentMenu(PlayerMenuUtility playerMenuUtility) {
+    public EquipmentMenu(NMLEquipment nmlEquipment, PlayerMenuUtility playerMenuUtility) {
         super(playerMenuUtility);
 
+        this.nmlEquipment = nmlEquipment;
+        itemSystem = nmlEquipment.getItemSystem();
         player = playerMenuUtility.getOwner();
         playerInventory = player.getInventory();
         helmet = playerInventory.getHelmet();
@@ -62,7 +65,7 @@ public class EquipmentMenu extends Menu {
                 playerInventory.addItem(helmet);
                 playerInventory.setHelmet(new ItemStack(Material.AIR));
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
-                new EquipmentMenu(playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 20 -> { // take off chestplate
                 if (chestplate == null) chestplate = new ItemStack(Material.AIR);
@@ -70,7 +73,7 @@ public class EquipmentMenu extends Menu {
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(new ItemStack(Material.AIR));
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, null));
-                new EquipmentMenu(playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 29 -> { // take off leggings
                 if (leggings == null) leggings = new ItemStack(Material.AIR);
@@ -78,7 +81,7 @@ public class EquipmentMenu extends Menu {
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(new ItemStack(Material.AIR));
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, null));
-                new EquipmentMenu(playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 38 -> { // take off boots
                 if (boots == null) boots = new ItemStack(Material.AIR);
@@ -86,10 +89,10 @@ public class EquipmentMenu extends Menu {
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(new ItemStack(Material.AIR));
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, null));
-                new EquipmentMenu(playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 21 -> { // stop taking off other glove (why?)
-                if (ItemSystem.getItemType(mainHand) == ItemType.GLOVE) {
+                if (itemSystem.getItemType(mainHand) == ItemType.GLOVE) {
                     playerInventory.setItemInOffHand(offHand);
                     return;
                 }
@@ -98,7 +101,7 @@ public class EquipmentMenu extends Menu {
                 boolean changedOffhand = true;
                 int foundSlot = -1;
 
-                if (ItemSystem.getItemType(offHand) == ItemType.GLOVE) { // idk why i need to do this
+                if (itemSystem.getItemType(offHand) == ItemType.GLOVE) { // idk why i need to do this
                     playerInventory.setItemInOffHand(offHand);
                     return;
                 }
@@ -115,7 +118,7 @@ public class EquipmentMenu extends Menu {
                     }
                 }
 
-                if (foundSlot == playerInventory.getHeldItemSlot() && ItemSystem.isItemType(offHand, ItemType.SHIELD)) {
+                if (foundSlot == playerInventory.getHeldItemSlot() && itemSystem.isItemType(offHand, ItemType.SHIELD)) {
                     changedOffhand = false;
                 }
 
@@ -123,7 +126,7 @@ public class EquipmentMenu extends Menu {
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
                 }
 
-                new EquipmentMenu(playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 53 -> playerInventory.close(); // exit
         }
@@ -137,36 +140,36 @@ public class EquipmentMenu extends Menu {
 
         ItemStack clickedItem = event.getCurrentItem();
 
-        if (ItemSystem.isItemUsable(clickedItem, player)) {
-            switch (ItemSystem.getItemType(clickedItem)) {
+        if (itemSystem.isItemUsable(clickedItem, player)) {
+            switch (itemSystem.getItemType(clickedItem)) {
                 case HELMET -> { // swapping helmets
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, clickedItem));
-                    new EquipmentMenu(playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
                 case CHESTPLATE -> { // swapping chestplates
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, clickedItem));
-                    new EquipmentMenu(playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
                 case LEGGINGS -> { // swapping leggings
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, clickedItem));
-                    new EquipmentMenu(playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
                 case BOOTS -> { // swapping boots
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, clickedItem));
-                    new EquipmentMenu(playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
                 case SHIELD, QUIVER -> { // swapping offHand
                     boolean changedOffhand = true;
 
-                    if (ItemSystem.isItemType(clickedItem, ItemType.SHIELD) && clickedItem.isSimilar(mainHand)) {
+                    if (itemSystem.isItemType(clickedItem, ItemType.SHIELD) && clickedItem.isSimilar(mainHand)) {
                         changedOffhand = false;
                     }
 
@@ -176,7 +179,7 @@ public class EquipmentMenu extends Menu {
 
                     playerInventory.setItemInOffHand(clickedItem);
                     playerInventory.setItem(event.getSlot(), offHand);
-                    new EquipmentMenu(playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
             }
         } else {
@@ -253,21 +256,21 @@ public class EquipmentMenu extends Menu {
             statsItem.setItemMeta(statsMeta);
         } else {
             for (Map.Entry<ItemStat, Double> entry : total.entrySet()) {
-                ItemSystem.setStat(statsItem, entry.getKey(), entry.getValue());
+                itemSystem.setStat(statsItem, entry.getKey(), entry.getValue());
             }
 
-            ItemSystem.updateLoreWithStats(statsItem);
+            itemSystem.updateLoreWithStats(statsItem);
         }
 
         return statsItem;
     }
 
     private HashMap<ItemStat, Double> getAllDefensesOfPlayerArmor() {
-        HashMap<ItemStat, Double> helmetStats = ItemSystem.getAllStats(helmet);
-        HashMap<ItemStat, Double> chestplateStats = ItemSystem.getAllStats(chestplate);
-        HashMap<ItemStat, Double> leggingsStats = ItemSystem.getAllStats(leggings);
-        HashMap<ItemStat, Double> bootsStats = ItemSystem.getAllStats(boots);
-        HashMap<ItemStat, Double> offhandStats = ItemSystem.getAllStats(offHand);
+        HashMap<ItemStat, Double> helmetStats = itemSystem.getAllStats(helmet);
+        HashMap<ItemStat, Double> chestplateStats = itemSystem.getAllStats(chestplate);
+        HashMap<ItemStat, Double> leggingsStats = itemSystem.getAllStats(leggings);
+        HashMap<ItemStat, Double> bootsStats = itemSystem.getAllStats(boots);
+        HashMap<ItemStat, Double> offhandStats = itemSystem.getAllStats(offHand);
         HashMap<ItemStat, Double> total = helmetStats;
 
         chestplateStats.forEach((key, value) -> total.merge(key, value, Double::sum));
