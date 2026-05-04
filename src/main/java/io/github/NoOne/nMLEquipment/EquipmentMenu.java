@@ -9,6 +9,7 @@ import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -65,24 +66,28 @@ public class EquipmentMenu extends Menu {
                 playerInventory.addItem(helmet);
                 playerInventory.setHelmet(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
+                player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                 new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 20 -> { // take off chestplate
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, null));
+                player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                 new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 29 -> { // take off leggings
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, null));
+                player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                 new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 38 -> { // take off boots
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, null));
+                player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                 new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
             }
             case 30 -> { // take off offhand
@@ -90,6 +95,7 @@ public class EquipmentMenu extends Menu {
                     playerInventory.addItem(offHand);
                     playerInventory.setItemInOffHand(null);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
+                    player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
             }
@@ -111,24 +117,28 @@ public class EquipmentMenu extends Menu {
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, clickedItem));
+                    player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                 }
                 case CHESTPLATE -> { // swapping chestplates
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, clickedItem));
+                    player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                 }
                 case LEGGINGS -> { // swapping leggings
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, clickedItem));
+                    player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                 }
                 case BOOTS -> { // swapping boots
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, clickedItem));
+                    player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                 }
                 default -> { // swapping offhand
@@ -140,6 +150,7 @@ public class EquipmentMenu extends Menu {
                         playerInventory.setItemInOffHand(clickedItem);
                         playerInventory.setItem(event.getSlot(), offHand);
                         Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                        player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                         Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                     }
                 }

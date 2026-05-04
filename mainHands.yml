@@ -1,17 +1,20 @@
 cf942050-e942-4990-a113-e3df70b289be:
   ==: org.bukkit.inventory.ItemStack
   DataVersion: 4671
-  id: minecraft:shield
+  id: minecraft:iron_sword
   count: 1
   components:
+    minecraft:attribute_modifiers: '[{amount:-3.0d,id:"nmlitems:attack_speed",operation:"add_value",slot:"hand",type:"minecraft:attack_speed"}]'
     minecraft:unbreakable: '{}'
     minecraft:lore: '[{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
-      1",underlined:0b},{italic:0b,text:" "},{bold:1b,color:"gray",italic:0b,text:"COMMON
-      SHIELD"}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
-      15 Guard ⛨",underlined:0b}],text:""}]'
+      1",underlined:0b},{italic:0b,text:" "},{bold:1b,color:"green",italic:0b,text:"UNCOMMON
+      SWORD"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"        />______________",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"♦#####[]______________>",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"        \\>",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"dark_red",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
+      2 Physical Damage ⚔",underlined:0b}],text:""},{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
+      1 Radiant Damage ✦",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"─────────────",underlined:0b}],text:""},{extra:[{bold:0b,color:"blue",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
+      2 Crit Chance ☠",underlined:0b}],text:""}]'
     minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers","minecraft:unbreakable","minecraft:enchantments"]}'
-    minecraft:custom_name: '{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Poor
-      Shield",underlined:0b}],text:""}'
-    minecraft:custom_data: '{PublicBukkitValues:{"nmlitems:common":1,"nmlitems:guard":15.0d,"nmlitems:level":1,"nmlitems:original_name":"§7Poor
-      Shield","nmlitems:shield":1}}'
+    minecraft:custom_name: '{extra:[{bold:0b,color:"green",italic:0b,obfuscated:0b,strikethrough:0b,text:"Goofy
+      Ass Falchion",underlined:0b}],text:""}'
+    minecraft:custom_data: '{PublicBukkitValues:{"nmlitems:critchance":2.0d,"nmlitems:level":1,"nmlitems:original_name":"§aGoofy
+      Ass Falchion","nmlitems:physicaldamage":2.0d,"nmlitems:radiantdamage":1.0d,"nmlitems:sword":1,"nmlitems:uncommon":1}}'
   schema_version: 1
