@@ -1,4 +1,4 @@
-package io.github.NoOne.nMLEquipment.events;
+package io.github.NoOne.nMLEquipment.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

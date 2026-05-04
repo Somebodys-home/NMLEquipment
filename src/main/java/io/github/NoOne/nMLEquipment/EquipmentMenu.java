@@ -1,9 +1,8 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.menuSystem.PlayerMenuUtility;
-import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
+import io.github.NoOne.nMLEquipment.listeners.EquipmentChangeEvent;
 import io.github.NoOne.nMLItems.ItemCreator;
 import io.github.NoOne.nMLItems.enums.ItemStat;
 import io.github.NoOne.nMLItems.ItemSystem;
@@ -15,7 +14,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 

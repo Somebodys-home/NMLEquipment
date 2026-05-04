@@ -1,5 +1,17 @@
 cf942050-e942-4990-a113-e3df70b289be:
   ==: org.bukkit.inventory.ItemStack
-  schema_version: 1
   DataVersion: 4671
-  id: minecraft:air
+  id: minecraft:shield
+  count: 1
+  components:
+    minecraft:unbreakable: '{}'
+    minecraft:lore: '[{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+      1",underlined:0b},{italic:0b,text:" "},{bold:1b,color:"gray",italic:0b,text:"COMMON
+      SHIELD"}],text:""},"",{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
+      15 Guard ⛨",underlined:0b}],text:""}]'
+    minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers","minecraft:unbreakable","minecraft:enchantments"]}'
+    minecraft:custom_name: '{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Poor
+      Shield",underlined:0b}],text:""}'
+    minecraft:custom_data: '{PublicBukkitValues:{"nmlitems:common":1,"nmlitems:guard":15.0d,"nmlitems:level":1,"nmlitems:original_name":"§7Poor
+      Shield","nmlitems:shield":1}}'
+  schema_version: 1

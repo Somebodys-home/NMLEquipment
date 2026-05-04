@@ -1,7 +1,6 @@
 package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
-import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;

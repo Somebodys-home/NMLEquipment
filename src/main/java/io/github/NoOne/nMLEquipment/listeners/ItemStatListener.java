@@ -1,7 +1,6 @@
 package io.github.NoOne.nMLEquipment.listeners;
 
 import io.github.NoOne.nMLEquipment.NMLEquipment;
-import io.github.NoOne.nMLEquipment.events.EquipmentChangeEvent;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.event.EventHandler;

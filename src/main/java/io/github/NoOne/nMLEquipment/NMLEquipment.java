@@ -1,8 +1,6 @@
 package io.github.NoOne.nMLEquipment;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import io.github.NoOne.menuSystem.MenuListener;
-import io.github.NoOne.nMLEquipment.events.PlayerDropItemSlotHandler;
 import io.github.NoOne.nMLEquipment.listeners.EquipmentListener;
 import io.github.NoOne.nMLEquipment.listeners.ItemStatListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.MainHandsConfig;
@@ -53,7 +51,6 @@ public final class NMLEquipment extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EquipmentListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemStatListener(this), this);
         getServer().getPluginManager().registerEvents(new SaveMainHandListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerDropItemSlotHandler(ProtocolLibrary.getProtocolManager(), this), this);
     }
 
     @Override
