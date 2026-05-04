@@ -133,20 +133,17 @@ public class EquipmentMenu extends Menu {
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, clickedItem));
                     Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                 }
-                case SHIELD, QUIVER -> { // swapping offhand
-                    boolean changedOffhand = true;
+                default -> { // swapping offhand
+                    if (itemSystem.isEquippable(clickedItem)) {
+                        if (mainHand.equals(offHand) && itemSystem.isItemType(mainHand, ItemType.GLOVE)) {
+                            return;
+                        }
 
-                    if (itemSystem.isItemType(clickedItem, ItemType.SHIELD) && clickedItem.isSimilar(mainHand)) {
-                        changedOffhand = false;
-                    }
-
-                    if (changedOffhand) {
+                        playerInventory.setItemInOffHand(clickedItem);
+                        playerInventory.setItem(event.getSlot(), offHand);
                         Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                        Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
                     }
-
-                    playerInventory.setItemInOffHand(clickedItem);
-                    playerInventory.setItem(event.getSlot(), offHand);
-                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
                 }
             }
         } else {

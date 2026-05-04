@@ -1,5 +1,5 @@
 cf942050-e942-4990-a113-e3df70b289be:
   ==: org.bukkit.inventory.ItemStack
-  DataVersion: 4671
   schema_version: 1
+  DataVersion: 4671
   id: minecraft:air
