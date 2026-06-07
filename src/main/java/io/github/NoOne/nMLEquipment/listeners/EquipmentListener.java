@@ -112,7 +112,7 @@ public class EquipmentListener implements Listener {
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
         boolean usable = itemSystem.isItemUsable(heldItem, player);
 
-        if (itemSystem.hasLevelKey(heldItem)) {
+        if (itemSystem.hasLevelKey(heldItem) && itemSystem.hasOriginalNameKey(heldItem)) {
             itemSystem.updateUnusableItemName(heldItem, usable);
 
             if (!usable) {
