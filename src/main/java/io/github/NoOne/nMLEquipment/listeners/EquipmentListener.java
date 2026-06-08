@@ -1,5 +1,6 @@
 package io.github.NoOne.nMLEquipment.listeners;
 
+import io.github.NoOne.menuSystem.Menu;
 import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.nMLEquipment.EquipmentMenu;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
@@ -37,6 +38,10 @@ public class EquipmentListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         ItemStack cursorItem = event.getCursor();
+
+        if (!(event.getClickedInventory() instanceof PlayerInventory)) {
+            return;
+        }
 
         // clicking on armor/offhand slots
         if ((event.getSlotType() == InventoryType.SlotType.ARMOR || event.getSlot() == 40)) {
