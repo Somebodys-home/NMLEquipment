@@ -16,7 +16,7 @@ public class EquipmentCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player player) {
-            new EquipmentMenu(nMLEquipment, MenuSystem.getPlayerMenuUtility(player)).open();
+            new EquipmentMenu(nMLEquipment, player).open();
         }
 
         return true;

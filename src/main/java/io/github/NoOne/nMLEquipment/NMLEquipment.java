@@ -19,17 +19,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public final class NMLEquipment extends JavaPlugin {
     private ProfileManager profileManager;
-    private SkillSetManager skillSetManager;
     private EquipmentTracker equipmentTracker;
     private MainHandsConfig mainHandsConfig;
     private SaveMainHandManager saveMainHandManager;
-    private ItemSystem itemSystem;
 
     @Override
     public void onEnable() {
         profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
-        skillSetManager = JavaPlugin.getPlugin(NMLSkills.class).getSkillSetManager();
-        itemSystem = JavaPlugin.getPlugin(NMLItems.class).getItemSystem(); // you good dawg??
 
         mainHandsConfig = new MainHandsConfig(this, "mainHands");
         mainHandsConfig.loadConfig();
@@ -68,14 +64,6 @@ public final class NMLEquipment extends JavaPlugin {
 
     public ProfileManager getProfileManager() {
         return profileManager;
-    }
-
-    public SkillSetManager getSkillSetManager() {
-        return skillSetManager;
-    }
-
-    public ItemSystem getItemSystem() {
-        return itemSystem;
     }
 
     public SaveMainHandManager getSaveMainHandManager() {

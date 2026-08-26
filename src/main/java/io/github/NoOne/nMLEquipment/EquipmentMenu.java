@@ -20,7 +20,6 @@ import java.util.*;
 
 public class EquipmentMenu extends Menu {
     private NMLEquipment nmlEquipment;
-    private ItemSystem itemSystem;
     private Player player;
     private PlayerInventory playerInventory;
     private ItemStack helmet;
@@ -30,12 +29,11 @@ public class EquipmentMenu extends Menu {
     private ItemStack mainHand;
     private ItemStack offHand;
 
-    public EquipmentMenu(NMLEquipment nmlEquipment, PlayerMenuUtility playerMenuUtility) {
-        super(playerMenuUtility);
+    public EquipmentMenu(NMLEquipment nmlEquipment, Player player) {
+        super(player);
 
         this.nmlEquipment = nmlEquipment;
-        itemSystem = nmlEquipment.getItemSystem();
-        player = playerMenuUtility.getOwner();
+        this.player = player;
         playerInventory = player.getInventory();
         helmet = playerInventory.getHelmet();
         chestplate = playerInventory.getChestplate();
@@ -67,36 +65,36 @@ public class EquipmentMenu extends Menu {
                 playerInventory.setHelmet(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, null));
                 player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, player).open();
             }
             case 20 -> { // take off chestplate
                 playerInventory.addItem(chestplate);
                 playerInventory.setChestplate(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, null));
                 player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, player).open();
             }
             case 29 -> { // take off leggings
                 playerInventory.addItem(leggings);
                 playerInventory.setLeggings(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, null));
                 player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, player).open();
             }
             case 38 -> { // take off boots
                 playerInventory.addItem(boots);
                 playerInventory.setBoots(null);
                 Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, null));
                 player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
+                new EquipmentMenu(nmlEquipment, player).open();
             }
             case 30 -> { // take off offhand
-                if (!itemSystem.isItemType(offHand, ItemType.GLOVE)) {
+                if (!ItemSystem.isItemType(offHand, ItemType.GLOVE)) {
                     playerInventory.addItem(offHand);
                     playerInventory.setItemInOffHand(null);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                    new EquipmentMenu(nmlEquipment, playerMenuUtility).open();
+                    new EquipmentMenu(nmlEquipment, player).open();
                 }
             }
             case 53 -> playerInventory.close(); // exit
@@ -111,39 +109,39 @@ public class EquipmentMenu extends Menu {
 
         ItemStack clickedItem = event.getCurrentItem();
 
-        if (itemSystem.isItemUsable(clickedItem, player)) {
-            switch (itemSystem.getItemType(clickedItem)) {
+        if (ItemSystem.isItemUsable(clickedItem, player)) {
+            switch (ItemSystem.getItemType(clickedItem)) {
                 case HELMET -> { // swapping helmets
                     playerInventory.setHelmet(clickedItem);
                     playerInventory.setItem(event.getSlot(), helmet);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, helmet, clickedItem));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
+                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
                 }
                 case CHESTPLATE -> { // swapping chestplates
                     playerInventory.setChestplate(clickedItem);
                     playerInventory.setItem(event.getSlot(), chestplate);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, chestplate, clickedItem));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
+                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
                 }
                 case LEGGINGS -> { // swapping leggings
                     playerInventory.setLeggings(clickedItem);
                     playerInventory.setItem(event.getSlot(), leggings);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, leggings, clickedItem));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
+                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
                 }
                 case BOOTS -> { // swapping boots
                     playerInventory.setBoots(clickedItem);
                     playerInventory.setItem(event.getSlot(), boots);
                     Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, boots, clickedItem));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
+                    Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
                 }
                 default -> { // swapping offhand
-                    if (itemSystem.isEquippable(clickedItem)) {
-                        if (mainHand.equals(offHand) && itemSystem.isItemType(mainHand, ItemType.GLOVE)) {
+                    if (ItemSystem.isEquippable(clickedItem)) {
+                        if (mainHand.equals(offHand) && ItemSystem.isItemType(mainHand, ItemType.GLOVE)) {
                             return;
                         }
 
@@ -151,7 +149,7 @@ public class EquipmentMenu extends Menu {
                         playerInventory.setItem(event.getSlot(), offHand);
                         Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
                         player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
-                        Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, playerMenuUtility).open(), 1L);
+                        Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
                     }
                 }
             }
@@ -227,21 +225,21 @@ public class EquipmentMenu extends Menu {
             statsItem.setItemMeta(statsMeta);
         } else {
             for (Map.Entry<ItemStat, Double> entry : total.entrySet()) {
-                itemSystem.setStat(statsItem, entry.getKey(), entry.getValue());
+                ItemSystem.setStat(statsItem, entry.getKey(), entry.getValue());
             }
 
-            itemSystem.updateLoreWithStats(statsItem);
+            ItemSystem.updateItemLoreWithStats(statsItem);
         }
 
         return statsItem;
     }
 
     private HashMap<ItemStat, Double> getAllDefensesOfPlayerArmor() {
-        HashMap<ItemStat, Double> helmetStats = itemSystem.getAllStats(helmet);
-        HashMap<ItemStat, Double> chestplateStats = itemSystem.getAllStats(chestplate);
-        HashMap<ItemStat, Double> leggingsStats = itemSystem.getAllStats(leggings);
-        HashMap<ItemStat, Double> bootsStats = itemSystem.getAllStats(boots);
-        HashMap<ItemStat, Double> offhandStats = itemSystem.getAllStats(offHand);
+        HashMap<ItemStat, Double> helmetStats = ItemSystem.getAllStats(helmet);
+        HashMap<ItemStat, Double> chestplateStats = ItemSystem.getAllStats(chestplate);
+        HashMap<ItemStat, Double> leggingsStats = ItemSystem.getAllStats(leggings);
+        HashMap<ItemStat, Double> bootsStats = ItemSystem.getAllStats(boots);
+        HashMap<ItemStat, Double> offhandStats = ItemSystem.getAllStats(offHand);
         HashMap<ItemStat, Double> total = helmetStats;
 
         chestplateStats.forEach((key, value) -> total.merge(key, value, Double::sum));
