@@ -41,7 +41,9 @@ public class EquipmentTracker {
                         if ((ItemSystem.isItemType(heldItem, ItemType.SHIELD) || ItemSystem.isWeapon(heldItem))) {
                             for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(heldItem).entrySet()) {
                                 stats.add2Stat(statEntry.getKey(), statEntry.getValue());
-                            }                        }
+                            }
+                        }
+
                         if ((ItemSystem.isItemType(previousHeldItem, ItemType.SHIELD) || ItemSystem.isWeapon(previousHeldItem))) {
                             for (Map.Entry<String, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(previousHeldItem).entrySet()) {
                                 stats.removeFromStat(statEntry.getKey(), statEntry.getValue());

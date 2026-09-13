@@ -1,14 +1,10 @@
 package io.github.NoOne.nMLEquipment.listeners;
 
-import io.github.NoOne.menuSystem.Menu;
-import io.github.NoOne.menuSystem.MenuSystem;
 import io.github.NoOne.nMLEquipment.EquipmentMenu;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import io.github.NoOne.nMLSkills.skillSystem.SkillChangeEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,9 +16,8 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.persistence.PersistentDataContainer;
 
-import static io.github.NoOne.nMLItems.enums.ItemType.*;
+import static io.github.NoOne.nMLItems.enums.ItemType.SHIELD;
 
 public class EquipmentListener implements Listener {
     private NMLEquipment nmlEquipment;
@@ -82,7 +77,7 @@ public class EquipmentListener implements Listener {
             (triggeringItem != null && playerInventory.getItem(playerInventory.getHeldItemSlot()) != null &&
             playerInventory.getItem(playerInventory.getHeldItemSlot()).isSimilar(triggeringItem))) {
 
-            if (ItemSystem.isEquippable(triggeringItem) && ItemSystem.getItemType(triggeringItem) != SHIELD) {
+            if (ItemSystem.isEquippable(triggeringItem) && !ItemSystem.isItemType(triggeringItem, SHIELD)) {
                 event.setCancelled(true);
 
                 if (ItemSystem.isItemUsable(triggeringItem, player)) {
@@ -113,14 +108,10 @@ public class EquipmentListener implements Listener {
     public void levelCheck(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ItemStack heldItem = player.getInventory().getItem(event.getNewSlot());
-        boolean usable = ItemSystem.isItemUsable(heldItem, player);
 
+        assert heldItem != null;
         if (ItemSystem.hasLevelKey(heldItem) && ItemSystem.hasOriginalNameKey(heldItem)) {
-            ItemSystem.updateUnusableItemName(heldItem, usable);
-
-            if (!usable) {
-                NMLEquipment.sendUnusableItemWarning(player);
-            }
+            ItemSystem.usableItemCheck(heldItem, player);
         }
     }
 
@@ -130,7 +121,7 @@ public class EquipmentListener implements Listener {
         ItemStack heldItem = player.getInventory().getItemInMainHand();
 
         if (ItemSystem.hasLevelKey(heldItem)) {
-            ItemSystem.updateUnusableItemName(heldItem, ItemSystem.isItemUsable(heldItem, player));
+            ItemSystem.usableItemCheck(heldItem, player);
         }
     }
 }

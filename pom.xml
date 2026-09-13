@@ -13,7 +13,7 @@
     <properties>
         <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <shade.prefix>io.github.NoOne.nMLEquipment.shaded</shade.prefix>
+        <shade.prefix>io.github.NoOne.nmlEquipment.shaded</shade.prefix>
     </properties>
 
     <build>
@@ -35,6 +35,23 @@
                 <configuration>
                     <outputDirectory>C:\No Man's Land\plugins</outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -77,7 +94,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>5be862b0af</version>
+            <version>33ec94f46b</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
