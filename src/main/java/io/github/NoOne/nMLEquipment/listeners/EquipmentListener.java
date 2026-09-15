@@ -3,6 +3,7 @@ package io.github.NoOne.nMLEquipment.listeners;
 import io.github.NoOne.nMLEquipment.EquipmentMenu;
 import io.github.NoOne.nMLEquipment.NMLEquipment;
 import io.github.NoOne.nMLItems.ItemSystem;
+import io.github.NoOne.nMLPlayerStats.statSystem.StatChangeEvent;
 import io.github.NoOne.nMLSkills.skillSystem.SkillChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.github.NoOne.nMLItems.enums.ItemType.SHIELD;
 
 public class EquipmentListener implements Listener {
@@ -24,6 +28,20 @@ public class EquipmentListener implements Listener {
 
     public EquipmentListener(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
+    }
+
+    @EventHandler
+    public void onEquipmentChange(EquipmentChangeEvent event) {
+        HashMap<String, Double> doffedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDoffedEquipment());
+        HashMap<String, Double> donnedArmorStats = ItemSystem.convertItemStatsToPlayerStats(event.getDonnedEquipment());
+
+        for (Map.Entry<String, Double> entry : doffedArmorStats.entrySet()) {
+            Bukkit.getPluginManager().callEvent(new StatChangeEvent(event.getPlayer(), entry.getKey(), -entry.getValue()));
+        }
+
+        for (Map.Entry<String, Double> entry : donnedArmorStats.entrySet()) {
+            Bukkit.getPluginManager().callEvent(new StatChangeEvent(event.getPlayer(), entry.getKey(), entry.getValue()));
+        }
     }
 
     @EventHandler()

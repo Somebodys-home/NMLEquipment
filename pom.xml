@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLPlayerStats</artifactId>
-            <version>420295a785</version>
+            <version>5d716def2d</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -2,16 +2,11 @@ package io.github.NoOne.nMLEquipment;
 
 import io.github.NoOne.menuSystem.MenuListener;
 import io.github.NoOne.nMLEquipment.listeners.EquipmentListener;
-import io.github.NoOne.nMLEquipment.listeners.ItemStatListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.MainHandsConfig;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandManager;
-import io.github.NoOne.nMLItems.ItemSystem;
-import io.github.NoOne.nMLItems.NMLItems;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
-import io.github.NoOne.nMLSkills.NMLSkills;
-import io.github.NoOne.nMLSkills.skillSetSystem.SkillSetManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +40,6 @@ public final class NMLEquipment extends JavaPlugin {
         getCommand("equipment").setExecutor(new EquipmentCommand(this));
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new EquipmentListener(this), this);
-        getServer().getPluginManager().registerEvents(new ItemStatListener(this), this);
         getServer().getPluginManager().registerEvents(new SaveMainHandListener(this), this);
     }
 
