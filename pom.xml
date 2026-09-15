@@ -94,7 +94,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>33ec94f46b</version>
+            <version>4493184e0a</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
