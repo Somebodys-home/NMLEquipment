@@ -1,5 +1,19 @@
 cf942050-e942-4990-a113-e3df70b289be:
   ==: org.bukkit.inventory.ItemStack
   DataVersion: 4790
+  id: minecraft:bow
+  count: 1
+  components:
+    minecraft:attribute_modifiers: '[{amount:0.0d,id:"nmlitems:attack_speed",operation:"add_value",slot:"hand",type:"minecraft:attack_speed"}]'
+    minecraft:lore: '[{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
+      1",underlined:0b},{italic:0b,text:" "},{bold:1b,color:"gray",italic:0b,text:"COMMON
+      BOW"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"                  ◁----<<",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"  ︷__♦__︷        >>----▷",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"/ˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍˍ\\  ◁----<<",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"dark_red",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
+      2 Phys. Damage ⚔",underlined:0b}],text:""}]'
+    minecraft:unbreakable: '{}'
+    minecraft:custom_name: '{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Not
+      Your Average Yeet Cannon",underlined:0b}],text:""}'
+    minecraft:enchantments: '{"minecraft:infinity":1}'
+    minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers","minecraft:unbreakable","minecraft:enchantments"]}'
+    minecraft:custom_data: '{PublicBukkitValues:{"nmlitems:item_stats":"Phys. Damage-2","nmlitems:item_type":"Bow","nmlitems:level":1,"nmlitems:original_name":"§7Not
+      Your Average Yeet Cannon","nmlitems:rarity":"common","nmlitems:usable":1b}}'
   schema_version: 1
-  id: minecraft:air

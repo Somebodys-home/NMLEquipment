@@ -91,9 +91,17 @@ public class EquipmentMenu extends Menu {
                 if (!ItemSystem.isItemType(offHand, ItemType.GLOVE)) {
                     playerInventory.addItem(offHand);
                     playerInventory.setItemInOffHand(null);
-                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
                     player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                     new EquipmentMenu(nmlEquipment, player).open();
+
+                    // dont remove the stats of the quiver unless the player has a bow in their main hand
+                    if (ItemSystem.isItemType(offHand, ItemType.QUIVER)) {
+                        if (ItemSystem.isItemType(mainHand, ItemType.BOW)) {
+                            Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
+                        }
+                    } else {
+                        Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, null));
+                    }
                 }
             }
             case 53 -> playerInventory.close(); // exit
@@ -140,9 +148,18 @@ public class EquipmentMenu extends Menu {
 
                 playerInventory.setItemInOffHand(clickedItem);
                 playerInventory.setItem(event.getSlot(), offHand);
-                Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
                 player.playSound(player, Sound.ENTITY_CAMEL_SADDLE, 1f, 1f);
                 Bukkit.getScheduler().runTaskLater(nmlEquipment, () -> new EquipmentMenu(nmlEquipment, player).open(), 1L);
+
+
+                // dont edit the player's stats from changes with their quiver unless the player has a bow in their main hand
+                if (ItemSystem.isItemType(clickedItem, ItemType.QUIVER) || ItemSystem.isItemType(offHand, ItemType.QUIVER)) {
+                    if (ItemSystem.isItemType(mainHand, ItemType.BOW)) {
+                        Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                    }
+                } else {
+                    Bukkit.getPluginManager().callEvent(new EquipmentChangeEvent(player, offHand, clickedItem));
+                }
             }
         } else {
             NMLEquipment.sendUnusableItemWarning(player);

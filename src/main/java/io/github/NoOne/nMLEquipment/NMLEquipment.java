@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public final class NMLEquipment extends JavaPlugin {
     private ProfileManager profileManager;
-    private EquipmentTracker equipmentTracker;
+    private HeldItemTracker heldItemTracker;
     private MainHandsConfig mainHandsConfig;
     private SaveMainHandManager saveMainHandManager;
 
@@ -28,12 +28,12 @@ public final class NMLEquipment extends JavaPlugin {
         saveMainHandManager = new SaveMainHandManager(this);
         saveMainHandManager.loadMainHandsFromConfig();
 
-        equipmentTracker = new EquipmentTracker(this);
-        equipmentTracker.setPreviousHeldItems(saveMainHandManager.getMainHands());
+        heldItemTracker = new HeldItemTracker(this);
+        heldItemTracker.setPreviousHeldItems(saveMainHandManager.getMainHands());
         new BukkitRunnable() {
             @Override
             public void run() {
-                equipmentTracker.startTracker();
+                heldItemTracker.startTracker();
             }
         }.runTaskLater(this, 1L);
 
@@ -45,7 +45,6 @@ public final class NMLEquipment extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        equipmentTracker.stopTracker();
         saveMainHandManager.saveMainHandsToConfig();
         mainHandsConfig.saveConfig();
     }
