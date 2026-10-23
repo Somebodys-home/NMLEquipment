@@ -1,7 +1,9 @@
 name: NMLEquipment
-version: '1.0'
+version: '${version}'
+
 main: io.github.NoOne.nMLEquipment.NMLEquipment
-api-version: '1.21.8'
+api-version: '26.3'
+load: POSTWORLD
 depend:
   - NMLPlayerStats
   - NMLItems
