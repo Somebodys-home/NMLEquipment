@@ -88,13 +88,13 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLPlayerStats</artifactId>
-            <version>5d716def2d</version>
+            <version>2b8bf03345</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLItems</artifactId>
-            <version>4493184e0a</version>
+            <version>5e07a8cbbd</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

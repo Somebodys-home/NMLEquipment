@@ -1,21 +1,12 @@
 cf942050-e942-4990-a113-e3df70b289be:
   ==: org.bukkit.inventory.ItemStack
   DataVersion: 5023
-  id: minecraft:stick
+  id: minecraft:magenta_dye
   count: 1
   components:
-    minecraft:lore: '[{extra:[{bold:0b,color:"white",italic:0b,obfuscated:0b,strikethrough:0b,text:"Lv.
-      1",underlined:0b},{italic:0b,text:" "},{bold:1b,color:"gray",italic:0b,text:"COMMON
-      WAND"}],text:""},"",{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"            *
-      ╲  ╱  *",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"♦========<
-      ⭐ >",underlined:0b}],text:""},{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"          *   ╱  ╲   *",underlined:0b}],text:""},"",{extra:[{bold:0b,color:"dark_purple",italic:0b,obfuscated:0b,strikethrough:0b,text:"+
-      2 Necro. Damage 🌀",underlined:0b}],text:""}]'
-    minecraft:attribute_modifiers: '[{amount:-3.13d,id:"nmlitems:attack_speed",operation:"add_value",slot:"hand",type:"minecraft:attack_speed"}]'
-    minecraft:unbreakable: '{}'
-    minecraft:max_stack_size: '1'
-    minecraft:custom_name: '{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"Exiled
-      Wand",underlined:0b}],text:""}'
-    minecraft:tooltip_display: '{hidden_components:["minecraft:attribute_modifiers","minecraft:unbreakable","minecraft:enchantments"]}'
-    minecraft:custom_data: '{PublicBukkitValues:{"nmlitems:item_stats":"Necro. Damage-2","nmlitems:item_type":"Wand","nmlitems:level":1,"nmlitems:original_name":"§7Exiled
-      Wand","nmlitems:rarity":"common","nmlitems:usable":1b}}'
+    minecraft:lore: '[{extra:[{bold:0b,color:"gray",italic:0b,obfuscated:0b,strikethrough:0b,text:"An
+      empty ability slot. Dunno why you''d put nothing here.",underlined:0b}],text:""}]'
+    minecraft:custom_name: '{extra:[{bold:0b,color:"light_purple",italic:0b,obfuscated:0b,strikethrough:0b,text:"Empty
+      Expertise Ability",underlined:0b}],text:""}'
+    minecraft:custom_data: '{PublicBukkitValues:{"nmlabilities:ability":1b}}'
   schema_version: 1
