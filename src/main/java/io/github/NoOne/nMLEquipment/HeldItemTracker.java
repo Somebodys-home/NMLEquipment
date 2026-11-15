@@ -38,6 +38,7 @@ public class HeldItemTracker {
                         Stats stats = profileManager.getStats(player.getUniqueId());
                         ItemStack offhand = player.getInventory().getItemInOffHand();
 
+                        // add the stats of the weapon or shield were holding in main hand
                         if ((ItemSystem.isItemType(heldItem, ItemType.SHIELD) || ItemSystem.isWeapon(heldItem))) {
                             for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(heldItem).entrySet()) {
                                 stats.addToStat(statEntry.getKey(), statEntry.getValue());
@@ -51,6 +52,7 @@ public class HeldItemTracker {
                             }
                         }
 
+                        // remove the stats of the weapon or shield we were holding in main hand
                         if ((ItemSystem.isItemType(previousHeldItem, ItemType.SHIELD) || ItemSystem.isWeapon(previousHeldItem))) {
                             for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(previousHeldItem).entrySet()) {
                                 stats.removeFromStat(statEntry.getKey(), statEntry.getValue());
