@@ -3,7 +3,7 @@ package io.github.NoOne.nMLEquipment;
 import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,12 +15,12 @@ import java.util.UUID;
 
 public class HeldItemTracker {
     private NMLEquipment nmlEquipment;
-    private ProfileManager profileManager;
+    private StatConfigManager statConfigManager;
     private HashMap<UUID, ItemStack> previousHeldItems = new HashMap<>();
 
     public HeldItemTracker(NMLEquipment nmlEquipment) {
         this.nmlEquipment = nmlEquipment;
-        profileManager = nmlEquipment.getProfileManager();
+        statConfigManager = nmlEquipment.getStatConfigManager();
     }
 
     public void startTracker() {
@@ -33,7 +33,7 @@ public class HeldItemTracker {
                     ItemStack previousHeldItem = previousHeldItems.get(uuid);
 
                     if (!areEquals(heldItem, previousHeldItem) && !AbilityItemManager.isAnAbility(heldItem)) {
-                        Stats stats = profileManager.getStats(player.getUniqueId());
+                        Stats stats = statConfigManager.getStats(player.getUniqueId());
                         ItemStack offhand = player.getInventory().getItemInOffHand();
 
                         // add the stats of the weapon or shield were holding in main hand

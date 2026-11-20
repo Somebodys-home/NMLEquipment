@@ -1,14 +1,11 @@
 package io.github.NoOne.nMLEquipment.saveMainHand;
 
 import io.github.NoOne.nMLEquipment.NMLEquipment;
-import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class SaveMainHandManager {

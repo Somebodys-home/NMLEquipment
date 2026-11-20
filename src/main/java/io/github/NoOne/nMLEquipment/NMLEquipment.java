@@ -6,21 +6,21 @@ import io.github.NoOne.nMLEquipment.saveMainHand.MainHandsConfig;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandListener;
 import io.github.NoOne.nMLEquipment.saveMainHand.SaveMainHandManager;
 import io.github.NoOne.nMLPlayerStats.NMLPlayerStats;
-import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
+import io.github.NoOne.nMLPlayerStats.StatConfigManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public final class NMLEquipment extends JavaPlugin {
-    private ProfileManager profileManager;
+    private StatConfigManager statConfigManager;
     private HeldItemTracker heldItemTracker;
     private MainHandsConfig mainHandsConfig;
     private SaveMainHandManager saveMainHandManager;
 
     @Override
     public void onEnable() {
-        profileManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getProfileManager();
+        statConfigManager = JavaPlugin.getPlugin(NMLPlayerStats.class).getStatConfigManager();
 
         mainHandsConfig = new MainHandsConfig(this, "mainHands");
         mainHandsConfig.loadConfig();
@@ -55,8 +55,8 @@ public final class NMLEquipment extends JavaPlugin {
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BASS, 2f, 1f);
     }
 
-    public ProfileManager getProfileManager() {
-        return profileManager;
+    public StatConfigManager getStatConfigManager() {
+        return statConfigManager;
     }
 
     public SaveMainHandManager getSaveMainHandManager() {
