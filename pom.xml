@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.github.Somebodys-home</groupId>
             <artifactId>NMLPlayerStats</artifactId>
-            <version>610edb810d</version>
+            <version>b513a2a874</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -108,11 +108,6 @@
             <artifactId>NMLSkills</artifactId>
             <version>9e80362d40</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <version>1.12.22</version>
         </dependency>
     </dependencies>
 </project>

@@ -4,7 +4,6 @@ import io.github.NoOne.nMLAbilities.abilitySystem.AbilityItemManager;
 import io.github.NoOne.nMLItems.ItemSystem;
 import io.github.NoOne.nMLItems.enums.ItemType;
 import io.github.NoOne.nMLPlayerStats.profileSystem.ProfileManager;
-import io.github.NoOne.nMLPlayerStats.statSystem.PlayerStat;
 import io.github.NoOne.nMLPlayerStats.statSystem.Stats;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class HeldItemTracker {
@@ -40,29 +38,21 @@ public class HeldItemTracker {
 
                         // add the stats of the weapon or shield were holding in main hand
                         if ((ItemSystem.isItemType(heldItem, ItemType.SHIELD) || ItemSystem.isWeapon(heldItem))) {
-                            for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(heldItem).entrySet()) {
-                                stats.addToStat(statEntry.getKey(), statEntry.getValue());
-                            }
+                            stats.addToStats(ItemSystem.convertItemStatsToPlayerStats(heldItem));
 
                             // if were adding the stats of a bow, also add the stats of the quiver too
                             if (ItemSystem.isItemType(heldItem, ItemType.BOW) && ItemSystem.isItemType(offhand, ItemType.QUIVER)) {
-                                for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(offhand).entrySet()) {
-                                    stats.addToStat(statEntry.getKey(), statEntry.getValue());
-                                }
+                                stats.addToStats(ItemSystem.convertItemStatsToPlayerStats(offhand));
                             }
                         }
 
                         // remove the stats of the weapon or shield we were holding in main hand
                         if ((ItemSystem.isItemType(previousHeldItem, ItemType.SHIELD) || ItemSystem.isWeapon(previousHeldItem))) {
-                            for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(previousHeldItem).entrySet()) {
-                                stats.removeFromStat(statEntry.getKey(), statEntry.getValue());
-                            }
+                            stats.removeFromStats(ItemSystem.convertItemStatsToPlayerStats(previousHeldItem));
 
                             // if were removing the stats of a bow, also remove the stats of the quiver too
                             if (ItemSystem.isItemType(previousHeldItem, ItemType.BOW) && ItemSystem.isItemType(offhand, ItemType.QUIVER)) {
-                                for (Map.Entry<PlayerStat, Double> statEntry : ItemSystem.convertItemStatsToPlayerStats(offhand).entrySet()) {
-                                    stats.removeFromStat(statEntry.getKey(), statEntry.getValue());
-                                }
+                                stats.removeFromStats(ItemSystem.convertItemStatsToPlayerStats(offhand));
                             }
                         }
                     }
